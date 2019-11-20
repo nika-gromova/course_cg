@@ -45,6 +45,11 @@ void Sphere::set_radius(double r)
     radius = r;
 }
 
+double Sphere::get_data()
+{
+    return center.z;
+}
+
 bool Sphere::hit(const Ray &ray, double &tmin)
 {
     Vector3D OC = ray.origin - center;

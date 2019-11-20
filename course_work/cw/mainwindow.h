@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QRegExpValidator>
 #include "world.h"
 
 namespace Ui {
@@ -31,8 +32,12 @@ private slots:
 
     void keyPressEvent(QKeyEvent *event);
 
+    void on_obj_add_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
+    QRegExpValidator double_valid;
+    QRegExpValidator zero_one_valid;
     World *world;
     MyPaintWidget *canvas;
     int lights_count;

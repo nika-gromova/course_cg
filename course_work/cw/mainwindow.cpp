@@ -2,17 +2,23 @@
 #include "ui_mainwindow.h"
 #include <iostream>
 #include <QToolTip>
+#include <QtCore>
 #include <QKeyEvent>
+#include <QLocale>
+#include <QRegExp>
 
 #include "vector3d.h"
 #include "maths.h"
 #include "sphere.h"
+#include "constants.h"
 
-const int key_enter = 16777220;
+// const int key_enter = 16777220;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    double_valid(QRegExp("^[-]{0,1}\\d{0,}\\.\\d{0,}$")),
+    zero_one_valid(QRegExp("^[-]{0,1}[0-1]\\.\\d{0,}$"))
 {
     ui->setupUi(this);
     ui->object_comboBox->addItem(tr("сфера"));
@@ -21,12 +27,30 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->object_comboBox->addItem(tr("конус"));
     ui->object_comboBox->addItem(tr("цилиндр"));
     ui->object_comboBox->addItem(tr("тор"));
+    ui->stackedWidget->setCurrentWidget(ui->sphere);
 
     ui->sphere_pos_pushButton->setToolTip("положение: <b>центр</b> сферы.\n");
 
-    ui->horizontalSlider->setRange(-100, 100);
-    ui->doubleSpinBox->setRange(-100, 100);
+    ui->horizontalSlider->setRange(0, 100);
+    ui->doubleSpinBox->setRange(0, 100);
     ui->doubleSpinBox->setDecimals(0);
+
+    ui->x_pos->setValidator(&double_valid);
+    ui->y_pos->setValidator(&double_valid);
+    ui->z_pos->setValidator(&double_valid);
+    ui->object_r->setValidator(&zero_one_valid);
+    ui->object_g->setValidator(&zero_one_valid);
+    ui->object_b->setValidator(&zero_one_valid);
+
+    // sphere
+    ui->sphere_radius->setValidator(&double_valid);
+
+    // box
+    ui->box_length->setValidator(&double_valid);
+    ui->box_width->setValidator(&double_valid);
+    ui->box_height->setValidator(&double_valid);
+
+
 
     canvas = new MyPaintWidget(ui->draw_widget);
     canvas->setMinimumSize(ui->draw_widget->width(), ui->draw_widget->height());
@@ -37,6 +61,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     zoom = -10;
 
+    // testing
+    /*
     GeometricObject *first_sphere = new Sphere(Point3D(0.0, 0.0, 5.0), 2);
     Material *m = new Material();
     m->color = RED;
@@ -48,6 +74,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     world->add_object(first_sphere);
     world->add_object(second_sphere);
+    */
+    // end testing
 
     lights_count = 0;
 }
@@ -60,22 +88,22 @@ MainWindow::~MainWindow()
 void MainWindow::on_object_comboBox_activated(int index)
 {
     switch (index) {
-    case 0:
+    case SPHERE:
         ui->stackedWidget->setCurrentWidget(ui->sphere);
         break;
-    case 1:
+    case BOX:
         ui->stackedWidget->setCurrentWidget(ui->box);
         break;
-    case 2:
+    case PYRAMID:
         ui->stackedWidget->setCurrentWidget(ui->pyramid);
         break;
-    case 3:
+    case CONE:
         ui->stackedWidget->setCurrentWidget(ui->cone);
         break;
-    case 4:
+    case CYLINDER:
         ui->stackedWidget->setCurrentWidget(ui->cylinder);
         break;
-    case 5:
+    case TORI:
         ui->stackedWidget->setCurrentWidget(ui->tori);
         break;
     default:
@@ -107,7 +135,7 @@ void MainWindow::on_doubleSpinBox_valueChanged(double arg1)
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == key_enter)
+    if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
     {
         int tmp = ui->horizontalSlider->value();
         if (tmp != zoom)
@@ -119,3 +147,26 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 }
 
 
+
+void MainWindow::on_obj_add_pushButton_clicked()
+{
+    bool ok;
+    // сначала материал
+    RGBColor cur_color(ui->object_r->text().toDouble(&ok), ui->object_g->text().toDouble(&ok), ui->object_b->text().toDouble(&ok));
+
+    Material *m = new Material();
+    m->color = cur_color;
+
+    int index = ui->object_comboBox->currentIndex();
+    switch(index) {
+    case SPHERE:
+        double tmp = ui->x_pos->text().toDouble(&ok);
+        std::cout << ok << std::endl;
+        GeometricObject *sphere = new Sphere(Point3D(ui->x_pos->text().toDouble(&ok), ui->y_pos->text().toDouble(&ok), ui->z_pos->text().toDouble(&ok)), ui->sphere_radius->text().toDouble(&ok));
+        sphere->set_material(m);
+        world->add_object(sphere);
+        break;
+    }
+
+    world->render(ui->horizontalSlider->value());
+}

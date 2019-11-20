@@ -11,5 +11,12 @@ const RGBColor WHITE(1.0);
 const RGBColor RED(1.0, 0.0, 0.0);
 
 
+#define SPHERE 0
+#define BOX 1
+#define PYRAMID 2
+#define CONE 3
+#define CYLINDER 4
+#define TORI 5
+
 
 #endif // CONSTANTS_H

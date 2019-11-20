@@ -71,7 +71,7 @@
       </font>
      </property>
      <property name="currentIndex">
-      <number>5</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="sphere">
       <widget class="QWidget" name="verticalLayoutWidget_3">
@@ -80,7 +80,7 @@
          <x>10</x>
          <y>0</y>
          <width>291</width>
-         <height>71</height>
+         <height>84</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_3">

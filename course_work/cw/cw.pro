@@ -26,20 +26,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    point2d.cpp \
-    point3d.cpp \
-    vector3d.cpp \
-    ray.cpp \
-    rgbcolor.cpp \
-    material.cpp \
-    geometricobject.cpp \
-    sphere.cpp \
-    maths.cpp \
-    world.cpp \
-    viewfeild.cpp \
-    tracer.cpp \
-    mypaintwidget.cpp \
-    worlddata.cpp
+        point2d.cpp \
+        point3d.cpp \
+        vector3d.cpp \
+        ray.cpp \
+        rgbcolor.cpp \
+        material.cpp \
+        geometricobject.cpp \
+        sphere.cpp \
+        maths.cpp \
+        world.cpp \
+        viewfeild.cpp \
+        tracer.cpp \
+        mypaintwidget.cpp \
+        worlddata.cpp
 
 HEADERS += \
         mainwindow.h \

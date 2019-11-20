@@ -18,7 +18,7 @@ public:
     void set_center(const Point3D& c);
     void set_center(double x, double y, double z);
     void set_radius(double r);
-
+    double get_data();
     bool hit(const Ray &ray, double &tmin);
     Vector3D calculate_normal(const Point3D &p);
 
