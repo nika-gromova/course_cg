@@ -17,6 +17,7 @@ const RGBColor RED(1.0, 0.0, 0.0);
 #define CONE 3
 #define CYLINDER 4
 #define TORI 5
+#define OBJECTS_TOTAL 6
 
 
 #endif // CONSTANTS_H

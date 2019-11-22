@@ -51,7 +51,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->box_width->setValidator(&double_valid);
     ui->box_height->setValidator(&double_valid);
 
-
+    // lights
+    ui->light_x_pos->setValidator(&double_valid);
+    ui->light_y_pos->setValidator(&double_valid);
+    ui->light_z_pos->setValidator(&double_valid);
+    ui->light_r->setValidator(&zero_one_valid);
+    ui->light_g->setValidator(&zero_one_valid);
+    ui->light_b->setValidator(&zero_one_valid);
+    ui->light_intensity->setValidator(&zero_one_valid);
 
     canvas = new MyPaintWidget(ui->draw_widget);
     canvas->setMinimumSize(ui->draw_widget->width(), ui->draw_widget->height());
@@ -114,24 +121,56 @@ void MainWindow::on_object_comboBox_activated(int index)
 
 void MainWindow::on_light_add_pushButton_clicked()
 {
+    bool ok = false;
+    RGBColor cur_color(ui->light_r->text().toDouble(&ok), ui->light_g->text().toDouble(&ok), ui->light_b->text().toDouble(&ok));
+    Point3D position(ui->light_x_pos->text().toDouble(&ok), ui->light_y_pos->text().toDouble(&ok), ui->light_z_pos->text().toDouble(&ok));
+    Light *light = new Light(ui->light_intensity->text().toDouble(&ok), cur_color, position);
+    world->add_light(light);
+    QString name = "источник № " + QString("%1").arg(lights_count);
+    ui->listWidget->addItem(name);
     lights_count++;
-    ui->listWidget->addItem(ui->ligth_name->text());
+    world->render(zoom);
 }
+
+void MainWindow::on_object_remove_pushButton_clicked()
+{
+    bool changed = false;
+    int obj_index = ui->listWidget_2->currentRow();
+    if (obj_index != -1)
+    {
+        changed = true;
+        world->remove_object(obj_index);
+        qDeleteAll(ui->listWidget_2->selectedItems());
+    }
+    if (changed)
+        world->render(zoom);
+}
+
 
 void MainWindow::on_light_remove_pushButton_clicked()
 {
-    lights_count--;
-    qDeleteAll(ui->listWidget->selectedItems());
+    bool changed = false;
+    int light_index = ui->listWidget->currentRow();
+    if (light_index != -1)
+    {
+        changed = true;
+        world->remove_light(light_index);
+        qDeleteAll(ui->listWidget->selectedItems());
+    }
+    if (changed)
+        world->render(zoom);
 }
 
 void MainWindow::on_horizontalSlider_valueChanged(int value)
 {
     ui->doubleSpinBox->setValue(value);
+    zoom = value;
 }
 
 void MainWindow::on_doubleSpinBox_valueChanged(double arg1)
 {
     ui->horizontalSlider->setValue(arg1);
+    zoom = arg1;
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
@@ -152,6 +191,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 void MainWindow::on_obj_add_pushButton_clicked()
 {
     bool ok;
+    QString name;
     // сначала материал
     RGBColor cur_color(ui->object_r->text().toDouble(&ok), ui->object_g->text().toDouble(&ok), ui->object_b->text().toDouble(&ok));
 
@@ -161,11 +201,14 @@ void MainWindow::on_obj_add_pushButton_clicked()
     int index = ui->object_comboBox->currentIndex();
     switch(index) {
     case SPHERE:
+        name = "сфера № " + QString("%1").arg(objects_count[SPHERE]);
+        objects_count[SPHERE]++;
+        ui->listWidget_2->addItem(name);
         GeometricObject *sphere = new Sphere(Point3D(ui->x_pos->text().toDouble(&ok), ui->y_pos->text().toDouble(&ok), ui->z_pos->text().toDouble(&ok)), ui->sphere_radius->text().toDouble(&ok));
         sphere->set_material(m);
         world->add_object(sphere);
         break;
     }
 
-    world->render(ui->horizontalSlider->value());
+    world->render(zoom);
 }

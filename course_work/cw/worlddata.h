@@ -9,12 +9,11 @@
 class WorldData
 {
 public:
-    WorldData(std::vector<GeometricObject *> ob, RGBColor color);
+    WorldData(void);
+    ~WorldData();
     std::vector<GeometricObject *> objects;
-    RGBColor background_color;
     std::vector<Light *> lights;
-
-    // ambient light
+    RGBColor background_color;
 };
 
 #endif // WORLDDATA_H

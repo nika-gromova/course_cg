@@ -8,14 +8,11 @@
 #include "viewfeild.h"
 #include "tracer.h"
 #include "mypaintwidget.h"
+#include "worlddata.h"
 
 
 class World
 {
-public:
-    RGBColor back_ground_color;
-    std::vector<GeometricObject *> objects;
-    // std::vector<Light> lights;
 public:
     World(int w, int h, int s);
 
@@ -23,9 +20,9 @@ public:
     void render(int zoom);
     void set_my_paint_widget(MyPaintWidget *dw);
 
-    // void remove_object(const int &index); ???
-    // void add_light(const Light &item);
-    // void remove_light(const int &index);
+    void remove_object(const int &index);
+    void add_light(Light *item);
+    void remove_light(const int &index);
 
     Tracer *tracer;
 private:
@@ -33,6 +30,7 @@ private:
     int canvas_height;
     int canvas_width;
     int pixel_size;
+    WorldData data;
 
     MyPaintWidget *draw_widget;
 };

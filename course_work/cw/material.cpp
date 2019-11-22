@@ -3,7 +3,7 @@
 Material::Material(void)
 {
     color = BLACK;
-    diffuse_coef = 0.2;
+    diffuse_coef = 0.2; // чем меньше, тем больше "маттовость"
     glossy_coef = 0.5;
     specular = 1;
     refraction_coef = 0.3;

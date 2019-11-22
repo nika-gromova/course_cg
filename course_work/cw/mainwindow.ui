@@ -62,7 +62,7 @@
        <x>10</x>
        <y>120</y>
        <width>301</width>
-       <height>81</height>
+       <height>91</height>
       </rect>
      </property>
      <property name="font">
@@ -80,7 +80,7 @@
          <x>10</x>
          <y>0</y>
          <width>291</width>
-         <height>84</height>
+         <height>92</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -154,7 +154,7 @@
          <x>10</x>
          <y>0</y>
          <width>291</width>
-         <height>81</height>
+         <height>84</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -263,7 +263,7 @@
          <x>10</x>
          <y>0</y>
          <width>291</width>
-         <height>81</height>
+         <height>84</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -347,7 +347,7 @@
          <x>10</x>
          <y>0</y>
          <width>291</width>
-         <height>81</height>
+         <height>84</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -431,7 +431,7 @@
          <x>10</x>
          <y>0</y>
          <width>291</width>
-         <height>81</height>
+         <height>84</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -515,7 +515,7 @@
          <x>10</x>
          <y>0</y>
          <width>291</width>
-         <height>81</height>
+         <height>84</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -885,40 +885,13 @@
     <property name="title">
      <string>Источники света</string>
     </property>
-    <widget class="QWidget" name="verticalLayoutWidget_7">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>170</y>
-       <width>191</width>
-       <height>101</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_7">
-      <item>
-       <widget class="QLabel" name="label_15">
-        <property name="font">
-         <font>
-          <pointsize>11</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>список источников:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QListWidget" name="listWidget"/>
-      </item>
-     </layout>
-    </widget>
     <widget class="QWidget" name="verticalLayoutWidget_8">
      <property name="geometry">
       <rect>
        <x>20</x>
        <y>20</y>
        <width>291</width>
-       <height>144</height>
+       <height>111</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -933,31 +906,6 @@
          <string>добавить новый источник света:</string>
         </property>
        </widget>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_18">
-        <item>
-         <widget class="QLabel" name="label_20">
-          <property name="font">
-           <font>
-            <pointsize>11</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>название:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="ligth_name">
-          <property name="font">
-           <font>
-            <pointsize>10</pointsize>
-           </font>
-          </property>
-         </widget>
-        </item>
-       </layout>
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_15">
@@ -1147,23 +1095,83 @@
       </item>
      </layout>
     </widget>
-    <widget class="QPushButton" name="light_remove_pushButton">
+    <widget class="QWidget" name="verticalLayoutWidget_10">
      <property name="geometry">
       <rect>
-       <x>220</x>
-       <y>240</y>
-       <width>81</width>
-       <height>26</height>
+       <x>170</x>
+       <y>138</y>
+       <width>141</width>
+       <height>141</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
+     <layout class="QVBoxLayout" name="verticalLayout_10">
+      <item>
+       <widget class="QLabel" name="label_23">
+        <property name="font">
+         <font>
+          <pointsize>11</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>объекты:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QListWidget" name="listWidget_2"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="object_remove_pushButton">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>удалить</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="verticalLayoutWidget_7">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>140</y>
+       <width>141</width>
+       <height>141</height>
+      </rect>
      </property>
-     <property name="text">
-      <string>удалить</string>
-     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_7">
+      <item>
+       <widget class="QLabel" name="label_15">
+        <property name="font">
+         <font>
+          <pointsize>11</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>источники:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QListWidget" name="listWidget"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="light_remove_pushButton">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>удалить</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </widget>
   </widget>

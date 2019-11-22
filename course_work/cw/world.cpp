@@ -1,24 +1,21 @@
 #include "world.h"
-#include "worlddata.h"
-
 #include <iostream>
 
 
 World::World(int w, int h, int s = 1): canvas_height(h), canvas_width(w), pixel_size(s)
 {
-    back_ground_color = RGBColor(0.0);
+    data.background_color = BLACK;
     draw_widget = NULL;
     tracer = new Tracer();
 }
 
 void World::add_object(GeometricObject *obj)
 {
-    objects.push_back(obj);
+    data.objects.push_back(obj);
 }
 
 void World::render(int zoom)
 {
-    WorldData data(objects, back_ground_color);
     RGBColor pixel_color;
     Ray ray;
     ray.origin = Point3D(0, 0, zoom);
@@ -46,5 +43,24 @@ void World::render(int zoom)
 void World::set_my_paint_widget(MyPaintWidget *dw)
 {
     draw_widget = dw;
+}
+
+void World::remove_object(const int &index)
+{
+    GeometricObject *tmp_ptr = data.objects[index];
+    data.objects.erase(data.objects.begin() + index);
+    delete tmp_ptr;
+}
+
+void World::add_light(Light *item)
+{
+    data.lights.push_back(item);
+}
+
+void World::remove_light(const int &index)
+{
+    Light *tmp_ptr = data.lights[index];
+    data.lights.erase(data.lights.begin() + index);
+    delete tmp_ptr;
 }
 

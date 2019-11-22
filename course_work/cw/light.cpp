@@ -8,7 +8,7 @@ Light::Light()
     position = Point3D(0, -10, 0);
 }
 
-Light::Light(double &is, RGBColor &c, Point3D &pos)
+Light::Light(const double &is, const RGBColor &c, const Point3D &pos)
 {
     intensity = is;
     color = c;
@@ -30,12 +30,12 @@ Light Light::operator=(Light &nl)
     return (*this);
 }
 
-Vector3D Light::get_light_ray(Point3D &P)
+Vector3D Light::get_light_ray(const Point3D &P) const
 {
-    return (P - position);
+    return (position - P);
 }
 
-RGBColor Light::get_light()
+RGBColor Light::get_light() const
 {
     return (color * intensity);
 }

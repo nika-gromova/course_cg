@@ -34,6 +34,8 @@ private slots:
 
     void on_obj_add_pushButton_clicked();
 
+    void on_object_remove_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QRegExpValidator double_valid;
@@ -41,6 +43,7 @@ private:
     World *world;
     MyPaintWidget *canvas;
     int lights_count;
+    int objects_count[OBJECTS_TOTAL] = {0};
     int zoom;
 };
 
