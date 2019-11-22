@@ -31,9 +31,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->sphere_pos_pushButton->setToolTip("положение: <b>центр</b> сферы.\n");
 
-    ui->horizontalSlider->setRange(0, 100);
-    ui->doubleSpinBox->setRange(0, 100);
-    ui->doubleSpinBox->setDecimals(0);
+    ui->horizontalSlider->setRange(-100, 100);
+    ui->doubleSpinBox->setRange(-100, 100);
+    ui->doubleSpinBox->setDecimals(-10);
+    ui->horizontalSlider->setValue(-10);
 
     ui->x_pos->setValidator(&double_valid);
     ui->y_pos->setValidator(&double_valid);
