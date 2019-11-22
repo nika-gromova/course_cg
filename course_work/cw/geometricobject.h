@@ -20,7 +20,6 @@ public:
 
     void set_material(Material *m);
     Material* get_material(void) const;
-    virtual double get_data() = 0;
 
     virtual Vector3D calculate_normal(const Point3D &p) = 0;
     virtual bool hit(const Ray &ray, double &tmin) = 0;

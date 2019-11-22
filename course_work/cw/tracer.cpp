@@ -22,7 +22,6 @@ RGBColor Tracer::trace_ray(const Ray &ray, WorldData &data)
         cur_obj = data.objects[i];
         if (cur_obj->hit(ray, t) && (t < tmin))
         {
-            std::cout << "z: " << cur_obj->get_data() << std::endl;
             // std::cout << ray.origin.x << ";" << ray.origin.y << ": t - " << t << " " << "tmin - " << tmin << std::endl;
             hit = true;
             tmin = t;

@@ -161,8 +161,6 @@ void MainWindow::on_obj_add_pushButton_clicked()
     int index = ui->object_comboBox->currentIndex();
     switch(index) {
     case SPHERE:
-        double tmp = ui->x_pos->text().toDouble(&ok);
-        std::cout << ok << std::endl;
         GeometricObject *sphere = new Sphere(Point3D(ui->x_pos->text().toDouble(&ok), ui->y_pos->text().toDouble(&ok), ui->z_pos->text().toDouble(&ok)), ui->sphere_radius->text().toDouble(&ok));
         sphere->set_material(m);
         world->add_object(sphere);

@@ -39,7 +39,8 @@ SOURCES += \
         viewfeild.cpp \
         tracer.cpp \
         mypaintwidget.cpp \
-        worlddata.cpp
+        worlddata.cpp \
+    light.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -57,7 +58,8 @@ HEADERS += \
     viewfeild.h \
     tracer.h \
     mypaintwidget.h \
-    worlddata.h
+    worlddata.h \
+    light.h
 
 FORMS += \
         mainwindow.ui
