@@ -18,6 +18,7 @@ public:
 
     Vector3D get_light_ray(const Point3D &P) const;
     RGBColor get_light(void) const;
+    Point3D get_position(void) const;
 
     void set_intenity(double &is);
     void set_color(RGBColor &c);

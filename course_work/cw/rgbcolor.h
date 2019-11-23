@@ -23,6 +23,8 @@ public:
     RGBColor &operator*= (const RGBColor &color);
     RGBColor operator* (const double a) const;
     RGBColor &operator*= (const double a);
+    RGBColor operator/ (const double a) const;
+    RGBColor &operator/ (const double a);
     bool operator== (const RGBColor &color) const;
     double avg_color(void) const;
 };

@@ -57,8 +57,6 @@ bool Sphere::hit(const Ray &ray, double &tmin)
     int res = solve_quadric(t1, t2, params);
     if (!res)
         return false;
-    if (res == 1)
-        tmin = t1;
     else
     {
         // t1 - smaller; t2 - larger roots
@@ -80,6 +78,5 @@ bool Sphere::hit(const Ray &ray, double &tmin)
 Vector3D Sphere::calculate_normal(const Point3D &p)
 {
     Vector3D PC = p - center;
-    double inv_len = 1.0 / PC.length();
-    return (PC * inv_len);
+    return (PC.get_normal());
 }

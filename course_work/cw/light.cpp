@@ -40,6 +40,11 @@ RGBColor Light::get_light() const
     return (color * intensity);
 }
 
+Point3D Light::get_position() const
+{
+   return position;
+}
+
 void Light::set_intenity(double &is)
 {
     intensity = is;

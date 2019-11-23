@@ -12,7 +12,7 @@
 #include "sphere.h"
 #include "constants.h"
 
-// const int key_enter = 16777220;
+const int key_enter = 16777220;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -175,14 +175,11 @@ void MainWindow::on_doubleSpinBox_valueChanged(double arg1)
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
+
+    if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return || event->key() == key_enter)
     {
         int tmp = ui->horizontalSlider->value();
-        if (tmp != zoom)
-        {
-            world->render(tmp);
-            zoom = tmp;
-        }
+        world->render(tmp);
     }
 }
 
