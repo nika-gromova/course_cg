@@ -7,19 +7,47 @@ Tracer::Tracer(void) {}
 
 Tracer::~Tracer() {}
 
-Vector3D compute_reflected(const Ray &light_ray, const Vector3D &normal)
+Vector3D compute_reflected(const Vector3D &light_dir, const Vector3D &normal)
 {
     Vector3D result;
-    Vector3D norm_light = (light_ray.direction.get_normal());
-    result = (normal * (2 * (norm_light * normal))) - norm_light;
+    result = (normal * (2 * (light_dir * normal))) - light_dir;
     return result;
 }
 
+Vector3D compute_refracted(const Vector3D &light_dir, const Vector3D &normal, const double eta)
+{
+    Vector3D result;
+    double cos_theta1 = - (light_dir * normal) / (light_dir.length());
+    if (cos_theta1 < 0)
+        return compute_refracted(light_dir, -normal, 1.0 / eta);
+
+    double tmp = 1 - eta * eta * (1 - cos_theta1 * cos_theta1);
+    if (tmp < 0)
+    {
+        result = Vector3D(0.0);
+    }
+    else
+    {
+        double betta = eta * cos_theta1 - sqrt(tmp);
+        //if (betta > 0)
+            //betta = -betta;
+        result = ((light_dir * eta) + (normal * betta));
+    }
+    return result;
+}
 
 RGBColor Tracer::trace_ray(const Ray &ray, WorldData &data, int depth)
 {
     double tmin = kHugeValue;
     int num_obj = data.objects.size();
+
+    RGBColor local_color(0.0);
+    RGBColor total_intensity(AMBIENT);
+    RGBColor reflected_color(0.0);
+    RGBColor refracted_color(0.0);
+
+    Ray reflected;
+    Ray refracted;
 
     GeometricObject *cur_obj;
     Material *material_ptr;
@@ -35,43 +63,63 @@ RGBColor Tracer::trace_ray(const Ray &ray, WorldData &data, int depth)
         cur_obj = data.objects[i];
         if (cur_obj->hit(ray, t))
         {
-            std::cout << "here1\n";
-            if (t < tmin)
-            {
-                std::cout << "here2\n";
-                hit = true;
-                tmin = t;
-                index_min = i;
-            }
+            hit = true;
+            tmin = t;
+            index_min = i;
         }
     }
-    if (hit)
+    if (!hit)
     {
-        cur_obj = data.objects[index_min];
-        intersect_point = ray.origin + (ray.direction * tmin);
-        normal = cur_obj->calculate_normal(intersect_point);
-        material_ptr = (cur_obj->get_material());
-        RGBColor intensity = compute_intensity(data, intersect_point, normal, -(ray.direction), material_ptr, depth);
-        return (material_ptr->color * intensity);
-    }
-    else
         return (data.background_color);
+    }
+
+    cur_obj = data.objects[index_min];
+    intersect_point = ray.origin + (ray.direction * tmin);
+    normal = cur_obj->calculate_normal(intersect_point);
+    material_ptr = (cur_obj->get_material());
+
+    total_intensity += compute_intensity(data, intersect_point, normal, -(ray.direction), material_ptr);
+    local_color = (material_ptr->color * total_intensity);
+
+    if (depth <= 0 || material_ptr->reflect_coef <= 0)
+        return local_color;
+
+    reflected.origin = intersect_point;
+    reflected.direction = compute_reflected(-ray.direction, normal);
+    reflected_color = this->trace_ray(reflected, data, depth - 1);
+    reflected_color = (local_color + (reflected_color * material_ptr->reflect_coef));
+
+    if (material_ptr->eta > 1 || material_ptr->refract_coef <= 0)
+        return reflected_color;
+
+    refracted.origin = intersect_point;
+    refracted.direction = compute_refracted(ray.direction, normal, material_ptr->eta);
+    if (!refracted.direction.is_null())
+        refracted_color = this->trace_ray(refracted, data, depth - 1);
+
+    return (reflected_color + (refracted_color * material_ptr->refract_coef));
+
 }
 
-RGBColor Tracer::compute_intensity(WorldData &data, const Point3D &intersect_point, const Vector3D &normal, const Vector3D &to_the_camera, const Material *material, int depth)
+RGBColor Tracer::compute_intensity(WorldData &data, const Point3D &intersect_point, const Vector3D &normal, const Vector3D &to_the_camera, const Material *material)
 {
     std::vector<Light *> &lights = data.lights;
-    RGBColor total_intensity(AMBIENT);
+
+    RGBColor diffuse_intensity(0.0);
+    RGBColor reflect_intensity(0.0);
+
     RGBColor current_intensity;
 
     Ray light_ray;
 
     Vector3D reflected;
-    Ray reflected_ray;
+
     double cos_theta = 0.0;
     double cos_alpha = 0.0;
 
     double distance;
+    double diffuse = material->diffuse_coef;
+    double reflect = material->reflect_coef;
 
     double dummy;
     bool shadow = false;
@@ -91,25 +139,16 @@ RGBColor Tracer::compute_intensity(WorldData &data, const Point3D &intersect_poi
         // diffuse
         cos_theta = (light_ray.direction * normal);
         if (cos_theta > 0.0)
-            total_intensity += ((current_intensity * cos_theta * material->diffuse_coef) / (distance));
+            diffuse_intensity += ((current_intensity * cos_theta) / (distance));
 
         // specular
         if (material->specular != -1)
         {
-            reflected = compute_reflected(light_ray, normal);
+            reflected = compute_reflected(light_ray.direction, normal);
             cos_alpha = (reflected * to_the_camera);
             if (cos_alpha > 0.0)
-                total_intensity += (current_intensity * material->diffuse_coef * pow(cos_alpha / (reflected.length() * to_the_camera.length()), material->specular));
-        }
-
-        if (material->refraction_coef > 0 || depth > 0)
-        {
-            reflected_ray.origin = intersect_point;
-            reflected_ray.direction = reflected;
-            RGBColor additional = this->trace_ray(reflected_ray, data, depth - 1);
-            std::cout << "reflected:\n" << additional.r << ", " << additional.g << ", " << additional.b << std::endl;
-            total_intensity += additional;
+                reflect_intensity += (current_intensity * pow(cos_alpha / (reflected.length() * to_the_camera.length()), material->specular));
         }
     }
-    return total_intensity;
+    return ((diffuse_intensity * diffuse) + (reflect_intensity * reflect));
 }

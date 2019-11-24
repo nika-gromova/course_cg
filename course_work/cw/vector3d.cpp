@@ -106,3 +106,10 @@ Vector3D Vector3D::get_normal() const
     double inv_len = 1.0 / (this->length());
     return Vector3D(x * inv_len, y * inv_len, z * inv_len);
 }
+
+bool Vector3D::is_null() const
+{
+    if (is_zero(x) && is_zero(y) && is_zero(z))
+        return true;
+    return false;
+}

@@ -19,5 +19,13 @@ const RGBColor RED(1.0, 0.0, 0.0);
 #define TORI 5
 #define OBJECTS_TOTAL 6
 
+#define GLASS 0
+#define METAL 1
+#define MIRROR 2
+#define IVORY 3
+#define PLASTIC 4
+#define RUBBER 5
+
+
 
 #endif // CONSTANTS_H

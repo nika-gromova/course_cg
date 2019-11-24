@@ -8,4 +8,6 @@ int solve_quadric(double &t1, double &t2, double params[3]);
 
 double min(double x0, double y0);
 
+double check_value(double value);
+
 #endif // MATHS_H

@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     zero_one_valid(QRegExp("^[-]{0,1}[0-1]\\.\\d{0,}$"))
 {
     ui->setupUi(this);
+
     ui->object_comboBox->addItem(tr("сфера"));
     ui->object_comboBox->addItem(tr("параллелепипед"));
     ui->object_comboBox->addItem(tr("правильная четырехугольная пирамида"));
@@ -30,6 +31,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->stackedWidget->setCurrentWidget(ui->sphere);
 
     ui->sphere_pos_pushButton->setToolTip("положение: <b>центр</b> сферы.\n");
+
+    ui->matherial_comboBox->addItem(tr("стекло"));
+    ui->matherial_comboBox->addItem(tr("металл"));
+    ui->matherial_comboBox->addItem(tr("зеркало"));
+    ui->matherial_comboBox->addItem(tr("слоновая кость"));
+    ui->matherial_comboBox->addItem(tr("пластик"));
+    ui->matherial_comboBox->addItem(tr("резина"));
+
 
     ui->horizontalSlider->setRange(-100, 100);
     ui->doubleSpinBox->setRange(-100, 100);
@@ -69,6 +78,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     zoom = -10;
 
+    glass = Material(0.01, 0.20, 125, 0.79, 1.0 / 1.42957113);
+    metal = Material(0.1, 0.7, 300, 0.2, 1.5);
+    mirror = Material(0.0, 1.0, 1, 0.0, 1.5);
+    ivory = Material(0.6, 0.4, 50, 0.0, 1.5);
+    plastic = Material(0.2, 0.8, 500, 0.0, 1.5);
+    rubber = Material(0.99, 0.01, 10, 0.0, 1.5);
+
     // testing
     /*
     GeometricObject *first_sphere = new Sphere(Point3D(0.0, 0.0, 5.0), 2);
@@ -90,6 +106,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    delete world;
+    delete canvas;
     delete ui;
 }
 
@@ -189,10 +207,34 @@ void MainWindow::on_obj_add_pushButton_clicked()
 {
     bool ok;
     QString name;
-    // сначала материал
-    RGBColor cur_color(ui->object_r->text().toDouble(&ok), ui->object_g->text().toDouble(&ok), ui->object_b->text().toDouble(&ok));
 
-    Material *m = new Material();
+    Material *m;
+
+    int material_index = ui->matherial_comboBox->currentIndex();
+    switch (material_index) {
+    case GLASS:
+        m = &glass;
+        break;
+    case METAL:
+        m = &metal;
+        break;
+    case MIRROR:
+        m = &mirror;
+        break;
+    case IVORY:
+        m = &ivory;
+        break;
+    case PLASTIC:
+        m = &plastic;
+        break;
+    case RUBBER:
+        m = &rubber;
+        break;
+    default:
+        break;
+    }
+
+    RGBColor cur_color(ui->object_r->text().toDouble(&ok), ui->object_g->text().toDouble(&ok), ui->object_b->text().toDouble(&ok));
     m->color = cur_color;
 
     int index = ui->object_comboBox->currentIndex();

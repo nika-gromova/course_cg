@@ -45,6 +45,14 @@ private:
     int lights_count;
     int objects_count[OBJECTS_TOTAL] = {0};
     int zoom;
+
+
+    Material glass;
+    Material metal;
+    Material mirror;
+    Material ivory;
+    Material plastic;
+    Material rubber;
 };
 
 #endif // MAINWINDOW_H

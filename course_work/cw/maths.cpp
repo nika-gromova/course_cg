@@ -29,3 +29,12 @@ int solve_quadric(double &t1, double &t2, double params[])
 inline double min(double x0, double x1) {
     return ((x0 < x1) ? x0 : x1);
 }
+
+double check_value(double value)
+{
+    if (value > 1.0)
+        value = 1.0;
+    else if (value < 0.0)
+        value = 0.0;
+    return value;
+}

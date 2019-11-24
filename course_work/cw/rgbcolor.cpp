@@ -2,15 +2,6 @@
 
 #include "maths.h"
 
-double check_value(double value)
-{
-    if (value > 1.0)
-        value = 1.0;
-    else if (value < 0.0)
-        value = 0.0;
-    return value;
-}
-
 RGBColor::RGBColor(void): r(0.0), g(0.0), b(0.0) {}
 
 RGBColor::RGBColor(double value)

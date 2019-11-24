@@ -6,7 +6,6 @@
 #include "vector3d.h"
 
 #define AMBIENT 0.2
-
 class Light
 {
 public:

@@ -3,13 +3,15 @@
 Material::Material(void)
 {
     color = BLACK;
-    diffuse_coef = 0.5; // чем меньше, тем больше "маттовость"
-    glossy_coef = 0.5; //
-    specular = 100; // чем меньше, тем больше блик
-    refraction_coef = 0.3;
+    diffuse_coef = 0.01; // чем меньше, тем больше "маттовость"
+    reflect_coef = 0.20; //
+    specular = 125; // чем меньше, тем больше блик
+    refract_coef = 0.79;
+    //eta = 1.0;
+    eta = 1.0 / 1.42957113;
 }
 
-Material::Material(const RGBColor &c, double d, double g, int s, double r)
+Material::Material(const RGBColor &c, double d, double g, int s, double r, double e)
 {
     double tmp = d + g + r;
     if (tmp > 1.0)
@@ -20,18 +22,37 @@ Material::Material(const RGBColor &c, double d, double g, int s, double r)
     }
     color = c;
     diffuse_coef = d;
-    glossy_coef = g;
+    reflect_coef = g;
     specular = s;
-    refraction_coef = r;
+    refract_coef = r;
+    eta = e;
+}
+
+Material::Material(double d, double g, int s, double r, double e)
+{
+    double tmp = d + g + r;
+    if (tmp > 1.0)
+    {
+        d /= tmp;
+        g /= tmp;
+        r /= tmp;
+    }
+    color = BLACK;
+    diffuse_coef = d;
+    reflect_coef = g;
+    specular = s;
+    refract_coef = r;
+    eta = e;
 }
 
 Material::Material(const Material &m)
 {
     color = m.color;
     diffuse_coef = m.diffuse_coef;
-    glossy_coef = m.glossy_coef;
+    reflect_coef = m.reflect_coef;
     specular = m.specular;
-    refraction_coef = m.refraction_coef;
+    refract_coef = m.refract_coef;
+    eta = m.eta;
 }
 
 Material &Material::operator=(const Material &m)
@@ -40,8 +61,9 @@ Material &Material::operator=(const Material &m)
         return (*this);
     color = m.color;
     diffuse_coef = m.diffuse_coef;
-    glossy_coef = m.glossy_coef;
+    reflect_coef = m.reflect_coef;
     specular = m.specular;
-    refraction_coef = m.refraction_coef;
+    refract_coef = m.refract_coef;
+    eta = m.eta;
     return (*this);
 }

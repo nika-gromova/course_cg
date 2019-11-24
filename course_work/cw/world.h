@@ -15,6 +15,7 @@ class World
 {
 public:
     World(int w, int h, int s);
+    ~World();
 
     void add_object(GeometricObject *obj);
     void render(int zoom);

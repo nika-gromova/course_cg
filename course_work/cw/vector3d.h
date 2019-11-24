@@ -2,6 +2,8 @@
 #define VECTOR3D_H
 
 #include <math.h>
+#include <maths.h>
+
 class Point3D;
 
 class Vector3D
@@ -37,6 +39,8 @@ public:
 
     Vector3D &normalize(void);
     Vector3D get_normal(void) const;
+
+    bool is_null(void) const;
 
 };
 
