@@ -83,8 +83,9 @@ MainWindow::MainWindow(QWidget *parent) :
     //mirror = Material(0.7, 0.3, 500, 0.0, 1.5);
     mirror = Material(0.0, 1.0, 50, 0.0, 1.5); // s больше
     ivory = Material(0.6, 0.4, 50, 0.0, 1.5);
-    plastic = Material(0.8, 0.2, 100, 0.0, 1.5); // что -то не так меняет цыет если рядом другой объект
+    plastic = Material(0.8, 0.2, 100, 0.0, 1.5);
     rubber = Material(0.99, 0.01, 10, 0.0, 1.5);
+    //ice = Material(0.0, 0.7, 10, 0.3, 0.752);
 
     // ivory 0.878 0.694 0.517
     // testing
@@ -108,11 +109,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    /*
     delete world;
     delete canvas;
     delete ui;
-    */
 }
 
 void MainWindow::on_object_comboBox_activated(int index)
@@ -212,27 +211,27 @@ void MainWindow::on_obj_add_pushButton_clicked()
     bool ok;
     QString name;
 
-    Material *m;
+    Material *m = new Material();
 
     int material_index = ui->matherial_comboBox->currentIndex();
     switch (material_index) {
     case GLASS:
-        m = &glass;
+        (*m) = glass;
         break;
     case METAL:
-        m = &metal;
+        (*m) = metal;
         break;
     case MIRROR:
-        m = &mirror;
+        (*m) = mirror;
         break;
     case IVORY:
-        m = &ivory;
+        (*m) = ivory;
         break;
     case PLASTIC:
-        m = &plastic;
+        (*m) = plastic;
         break;
     case RUBBER:
-        m = &rubber;
+        (*m) = rubber;
         break;
     default:
         break;

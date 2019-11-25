@@ -50,10 +50,12 @@ RGBColor Tracer::trace_ray(const Ray &ray, WorldData &data, int depth)
     Ray refracted;
 
     GeometricObject *cur_obj;
+    GeometricObject *closest_obj;
     Material *material_ptr;
 
     double t = 0.0;
-    int index_min = 0;
+    double ye;
+
     Point3D intersect_point;
     Vector3D normal;
     bool hit = false;
@@ -65,7 +67,7 @@ RGBColor Tracer::trace_ray(const Ray &ray, WorldData &data, int depth)
         {
             hit = true;
             tmin = t;
-            index_min = i;
+            closest_obj = cur_obj;
         }
     }
     if (!hit)
@@ -73,11 +75,10 @@ RGBColor Tracer::trace_ray(const Ray &ray, WorldData &data, int depth)
         return (data.background_color);
     }
 
-    cur_obj = data.objects[index_min];
     intersect_point = ray.origin + (ray.direction * tmin);
-    normal = cur_obj->calculate_normal(intersect_point);
-    material_ptr = (cur_obj->get_material());
-
+    normal = closest_obj->calculate_normal(intersect_point);
+    material_ptr = (closest_obj->get_material());
+    ye = material_ptr->color.g;
     total_intensity += compute_intensity(data, intersect_point, normal, -(ray.direction), material_ptr);
     local_color = (material_ptr->color * total_intensity);
 

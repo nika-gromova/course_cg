@@ -11,7 +11,7 @@ World::World(int w, int h, int s = 1): canvas_height(h), canvas_width(w), pixel_
 
 World::~World()
 {
-    //delete tracer;
+    delete tracer;
 }
 
 void World::add_object(GeometricObject *obj)

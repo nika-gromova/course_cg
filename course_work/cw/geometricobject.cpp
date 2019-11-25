@@ -2,7 +2,7 @@
 
 GeometricObject::GeometricObject(void)
 {
-    material_ptr = new Material();
+    material_ptr = NULL;
 }
 
 GeometricObject::GeometricObject(const GeometricObject &obj)
