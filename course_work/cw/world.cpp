@@ -11,7 +11,7 @@ World::World(int w, int h, int s = 1): canvas_height(h), canvas_width(w), pixel_
 
 World::~World()
 {
-    delete tracer;
+    //delete tracer;
 }
 
 void World::add_object(GeometricObject *obj)
@@ -52,9 +52,7 @@ void World::set_my_paint_widget(MyPaintWidget *dw)
 
 void World::remove_object(const int &index)
 {
-    GeometricObject *tmp_ptr = data.objects[index];
     data.objects.erase(data.objects.begin() + index);
-    delete tmp_ptr;
 }
 
 void World::add_light(Light *item)
@@ -64,8 +62,6 @@ void World::add_light(Light *item)
 
 void World::remove_light(const int &index)
 {
-    Light *tmp_ptr = data.lights[index];
     data.lights.erase(data.lights.begin() + index);
-    delete tmp_ptr;
 }
 

@@ -78,13 +78,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     zoom = -10;
 
-    glass = Material(0.01, 0.20, 125, 0.79, 1.0 / 1.42957113);
-    metal = Material(0.1, 0.7, 300, 0.2, 1.5);
-    mirror = Material(0.0, 1.0, 1, 0.0, 1.5);
+    glass = Material(0.01, 0.20, 125, 0.79, 1.0 / 1.5);
+    metal = Material(0.1, 0.7, 50, 0.0, 1.5); // плохо выглядит
+    //mirror = Material(0.7, 0.3, 500, 0.0, 1.5);
+    mirror = Material(0.0, 1.0, 50, 0.0, 1.5); // s больше
     ivory = Material(0.6, 0.4, 50, 0.0, 1.5);
-    plastic = Material(0.2, 0.8, 500, 0.0, 1.5);
+    plastic = Material(0.8, 0.2, 100, 0.0, 1.5); // что -то не так меняет цыет если рядом другой объект
     rubber = Material(0.99, 0.01, 10, 0.0, 1.5);
 
+    // ivory 0.878 0.694 0.517
     // testing
     /*
     GeometricObject *first_sphere = new Sphere(Point3D(0.0, 0.0, 5.0), 2);
@@ -106,9 +108,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    /*
     delete world;
     delete canvas;
     delete ui;
+    */
 }
 
 void MainWindow::on_object_comboBox_activated(int index)
@@ -188,7 +192,7 @@ void MainWindow::on_horizontalSlider_valueChanged(int value)
 void MainWindow::on_doubleSpinBox_valueChanged(double arg1)
 {
     ui->horizontalSlider->setValue(arg1);
-    zoom = arg1;
+    zoom = (int)(arg1);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)

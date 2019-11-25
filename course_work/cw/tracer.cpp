@@ -61,7 +61,7 @@ RGBColor Tracer::trace_ray(const Ray &ray, WorldData &data, int depth)
     for (int i = 0; i < num_obj; i++)
     {
         cur_obj = data.objects[i];
-        if (cur_obj->hit(ray, t))
+        if ((cur_obj->hit(ray, t)) && (t < tmin))
         {
             hit = true;
             tmin = t;

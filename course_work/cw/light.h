@@ -5,7 +5,7 @@
 #include "point3d.h"
 #include "vector3d.h"
 
-#define AMBIENT 0.2
+#define AMBIENT 0.4
 class Light
 {
 public:
