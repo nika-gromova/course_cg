@@ -190,8 +190,8 @@ void MainWindow::on_horizontalSlider_valueChanged(int value)
 
 void MainWindow::on_doubleSpinBox_valueChanged(double arg1)
 {
-    ui->horizontalSlider->setValue(arg1);
-    zoom = (int)(arg1);
+    zoom = static_cast<int>(arg1);
+    ui->horizontalSlider->setValue(zoom);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)

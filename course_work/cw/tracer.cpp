@@ -54,7 +54,6 @@ RGBColor Tracer::trace_ray(const Ray &ray, WorldData &data, int depth)
     Material *material_ptr;
 
     double t = 0.0;
-    double ye;
 
     Point3D intersect_point;
     Vector3D normal;
@@ -78,7 +77,6 @@ RGBColor Tracer::trace_ray(const Ray &ray, WorldData &data, int depth)
     intersect_point = ray.origin + (ray.direction * tmin);
     normal = closest_obj->calculate_normal(intersect_point);
     material_ptr = (closest_obj->get_material());
-    ye = material_ptr->color.g;
     total_intensity += compute_intensity(data, intersect_point, normal, -(ray.direction), material_ptr);
     local_color = (material_ptr->color * total_intensity);
 

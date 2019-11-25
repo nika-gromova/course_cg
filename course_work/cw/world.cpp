@@ -5,7 +5,7 @@
 World::World(int w, int h, int s = 1): canvas_height(h), canvas_width(w), pixel_size(s)
 {
     data.background_color = BLACK;
-    draw_widget = NULL;
+    draw_widget = nullptr;
     tracer = new Tracer();
 }
 

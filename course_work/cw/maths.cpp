@@ -8,7 +8,7 @@ int solve_quadric(double &t1, double &t2, double params[])
     double b = params[1];
     double c = params[2];
     double a2 = 2 * a;
-    double b_a2 = -b / a2;;
+    double b_a2 = -b / a2;
     double disc = b * b - 4 * a * c;
     if (is_zero(disc))
     {
