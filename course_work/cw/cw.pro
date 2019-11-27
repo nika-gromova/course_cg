@@ -24,6 +24,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+    box.cpp \
         main.cpp \
         mainwindow.cpp \
         point2d.cpp \
@@ -43,6 +44,7 @@ SOURCES += \
     light.cpp
 
 HEADERS += \
+    box.h \
         mainwindow.h \
     point3d.h \
     point2d.h \

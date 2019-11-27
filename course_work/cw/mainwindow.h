@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QRegExpValidator>
+#include <QColorDialog>
 #include "world.h"
 
 namespace Ui {
@@ -17,6 +18,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    double str_to_double(QString str, bool &r);
+    bool choose_color(double &r, double &g, double &b);
+    void choose_material(Material *m, const int &index);
 
 private slots:
 
@@ -36,8 +40,15 @@ private slots:
 
     void on_object_remove_pushButton_clicked();
 
+    void on_choose_color_pushButton_clicked();
+
+    void on_choose_color_pushButton_2_clicked();
+
+    void mousePressEvent(QMouseEvent *event);
+
 private:
     Ui::MainWindow *ui;
+    QColorDialog *color_dialog;
     QRegExpValidator double_valid;
     QRegExpValidator zero_one_valid;
     World *world;
