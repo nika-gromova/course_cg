@@ -57,25 +57,25 @@ RGBColor Tracer::trace_ray(const Ray &ray, WorldData &data, int depth)
 
     Point3D intersect_point;
     Vector3D normal;
+    Ray n_normal;
     bool hit = false;
 
     for (int i = 0; i < num_obj; i++)
     {
         cur_obj = data.objects[i];
-        if ((cur_obj->hit(ray, t)) && (t < tmin))
+        if ((cur_obj->hit(ray, t, n_normal)) && (t < tmin))
         {
             hit = true;
             tmin = t;
             closest_obj = cur_obj;
+            intersect_point = n_normal.origin;
+            normal = n_normal.direction;
         }
     }
     if (!hit)
     {
         return (data.background_color);
     }
-
-    intersect_point = ray.origin + (ray.direction * tmin);
-    normal = closest_obj->calculate_normal(intersect_point);
     material_ptr = (closest_obj->get_material());
     total_intensity += compute_intensity(data, intersect_point, normal, -(ray.direction), material_ptr);
     local_color = (material_ptr->color * total_intensity);
@@ -120,7 +120,6 @@ RGBColor Tracer::compute_intensity(WorldData &data, const Point3D &intersect_poi
     double diffuse = material->diffuse_coef;
     double reflect = material->reflect_coef;
 
-    double dummy;
     bool shadow = false;
 
     for (auto const &light : lights)
@@ -131,7 +130,7 @@ RGBColor Tracer::compute_intensity(WorldData &data, const Point3D &intersect_poi
         current_intensity = light->get_light();
 
         for (auto const &obj : data.objects)
-            shadow = shadow || (obj->hit(light_ray, dummy));
+            shadow = shadow || (obj->hit(light_ray));
         if (shadow)
             continue;
 

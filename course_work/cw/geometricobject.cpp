@@ -47,3 +47,10 @@ Material *GeometricObject::get_material() const
 {
     return material_ptr;
 }
+
+bool GeometricObject::hit(const Ray &ray)
+{
+    double dummy1;
+    Ray dummy2;
+    return (this->hit(ray, dummy1, dummy2));
+}

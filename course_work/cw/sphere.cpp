@@ -46,7 +46,7 @@ void Sphere::set_radius(double r)
 }
 
 
-bool Sphere::hit(const Ray &ray, double &tmin)
+bool Sphere::hit(const Ray &ray, double &tmin, Ray &normal)
 {
     Vector3D OC = ray.origin - center;
     double a = ray.direction.squared_length();
@@ -64,11 +64,15 @@ bool Sphere::hit(const Ray &ray, double &tmin)
         if (t1 > kEpsilon)
         {
             tmin = t1;
+            normal.origin = ray.origin + (ray.direction * tmin);
+            normal.direction = this->calculate_normal(normal.origin);
             return true;
         }
         if (t2 > kEpsilon)
         {
             tmin = t2;
+            normal.origin = ray.origin + (ray.direction * tmin);
+            normal.direction = this->calculate_normal(normal.origin);
             return true;
         }
     }
