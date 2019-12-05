@@ -6,6 +6,7 @@
 #include "vector3d.h"
 #include "ray.h"
 
+const double KEps = 0.001;
 
 class GeometricObject
 {
@@ -17,7 +18,7 @@ public:
     virtual ~GeometricObject(void);
 
     GeometricObject &operator= (const GeometricObject& obj);
-    virtual GeometricObject* clone(void) const = 0;
+    // virtual GeometricObject* clone(void) const = 0;
 
     void set_material(Material *m);
     Material* get_material(void) const;

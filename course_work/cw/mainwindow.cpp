@@ -11,6 +11,7 @@
 #include "vector3d.h"
 #include "maths.h"
 #include "sphere.h"
+#include "box.h"
 #include "constants.h"
 
 
@@ -280,6 +281,7 @@ void MainWindow::on_obj_add_pushButton_clicked()
     int index = ui->object_comboBox->currentIndex();
     switch(index) {
     case SPHERE:
+    {
         double r = str_to_double(ui->sphere_radius->text(), ok1);
         if (!ok1)
             return;
@@ -290,6 +292,23 @@ void MainWindow::on_obj_add_pushButton_clicked()
         sphere->set_material(m);
         world->add_object(sphere);
         break;
+    }
+    case BOX:
+    {
+        double a = str_to_double((ui->box_length->text()), ok1);
+        double b = str_to_double((ui->box_width->text()), ok2);
+        double c = str_to_double((ui->box_height->text()), ok3);
+        if (!ok1 || !ok2 || !ok3)
+            return;
+        name = "коробка № " + QString("%1").arg(objects_count[BOX]);
+        objects_count[BOX]++;
+        ui->listWidget_2->addItem(name);
+
+        GeometricObject *box = new Box(Point3D(x, y, z), a, b, c);
+        box->set_material(m);
+        world->add_object(box);
+        break;
+    }
     }
 
     world->render(zoom);

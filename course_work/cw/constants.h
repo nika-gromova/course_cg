@@ -10,7 +10,6 @@ const RGBColor BLACK(0.0);
 const RGBColor WHITE(1.0);
 const RGBColor RED(1.0, 0.0, 0.0);
 
-
 #define SPHERE 0
 #define BOX 1
 #define PYRAMID 2

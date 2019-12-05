@@ -1,5 +1,6 @@
 #include "geometricobject.h"
 
+
 GeometricObject::GeometricObject(void)
 {
     material_ptr = nullptr;

@@ -19,6 +19,7 @@ public:
     void set_sizes(const double &len, const double &w, const double &h);
 
     bool hit(const Ray &ray, double &tmin, Ray &normal);
+    Vector3D calculate_normal(const int &num);
 
 private:
     Point3D center;
