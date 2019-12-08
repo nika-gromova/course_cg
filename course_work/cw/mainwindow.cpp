@@ -12,6 +12,7 @@
 #include "maths.h"
 #include "sphere.h"
 #include "box.h"
+#include "pyramid.h"
 #include "constants.h"
 
 
@@ -307,6 +308,10 @@ void MainWindow::on_obj_add_pushButton_clicked()
         GeometricObject *box = new Box(Point3D(x, y, z), a, b, c);
         box->set_material(m);
         world->add_object(box);
+        break;
+    }
+    case PYRAMID:
+    {
         break;
     }
     }
