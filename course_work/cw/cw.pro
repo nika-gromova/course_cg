@@ -43,7 +43,8 @@ SOURCES += \
         tracer.cpp \
         mypaintwidget.cpp \
         worlddata.cpp \
-    light.cpp
+    light.cpp \
+    rectangle.cpp
 
 HEADERS += \
     box.h \
@@ -65,7 +66,8 @@ HEADERS += \
     tracer.h \
     mypaintwidget.h \
     worlddata.h \
-    light.h
+    light.h \
+    rectangle.h
 
 FORMS += \
         mainwindow.ui

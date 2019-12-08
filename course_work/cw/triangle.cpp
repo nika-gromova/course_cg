@@ -7,10 +7,32 @@ Triangle::Triangle(const Point3D &a, const Point3D &b, const Point3D &c) : Geome
     v0 = a;
     v1 = b;
     v2 = c;
-    local_normal = ((v1 - v0) ^ (v2 - v0));
+    local_normal = ((v2 - v0) ^ (v1 - v0));
+}
+
+Triangle::Triangle(const Triangle &t) : GeometricObject()
+{
+    v0 = t.v0;
+    v1 = t.v1;
+    v2 = t.v2;
+    local_normal = t.local_normal;
 }
 
 Triangle::~Triangle() {}
+
+Triangle &Triangle::operator=(const Triangle &t)
+{
+    if (this == &t)
+        return (*this);
+    GeometricObject::operator =(t);
+
+    v0 = t.v0;
+    v1 = t.v1;
+    v2 = t.v2;
+    local_normal = t.local_normal;
+
+    return (*this);
+}
 
 bool Triangle::hit(const Ray &ray, double &tmin, Ray &normal)
 {

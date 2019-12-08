@@ -14,6 +14,19 @@ Box::Box(const Box &b): GeometricObject(), center(b.center), p0(b.p0), p1(b.p1) 
 
 Box::~Box() {}
 
+Box &Box::operator=(const Box &b)
+{
+    if (this == &b)
+        return (*this);
+    GeometricObject::operator =(b);
+
+    center = b.center;
+    p0 = b.p0;
+    p1 = b.p1;
+
+    return (*this);
+}
+
 void Box::set_center(const Point3D &c)
 {
     center = c;

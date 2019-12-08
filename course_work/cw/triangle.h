@@ -9,8 +9,11 @@ public:
 
     Triangle();
     Triangle(const Point3D &a, const Point3D &b, const Point3D &c);
+    Triangle(const Triangle &t);
 
     ~Triangle(void);
+
+    Triangle &operator= (const Triangle &t);
 
     bool hit(const Ray &ray, double &tmin, Ray &normal);
 private:

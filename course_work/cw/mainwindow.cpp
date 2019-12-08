@@ -270,6 +270,7 @@ void MainWindow::on_obj_add_pushButton_clicked()
 
     if (!ok1 || !ok2 || !ok3)
         return;
+    Point3D center = Point3D(x, y, z);
 
     QString name;
 
@@ -289,7 +290,7 @@ void MainWindow::on_obj_add_pushButton_clicked()
         name = "сфера № " + QString("%1").arg(objects_count[SPHERE]);
         objects_count[SPHERE]++;
         ui->listWidget_2->addItem(name);
-        GeometricObject *sphere = new Sphere(Point3D(x, y, z), r);
+        GeometricObject *sphere = new Sphere(center, r);
         sphere->set_material(m);
         world->add_object(sphere);
         break;
@@ -301,17 +302,28 @@ void MainWindow::on_obj_add_pushButton_clicked()
         double c = str_to_double((ui->box_height->text()), ok3);
         if (!ok1 || !ok2 || !ok3)
             return;
-        name = "коробка № " + QString("%1").arg(objects_count[BOX]);
+        name = "параллелепипед № " + QString("%1").arg(objects_count[BOX]);
         objects_count[BOX]++;
         ui->listWidget_2->addItem(name);
 
-        GeometricObject *box = new Box(Point3D(x, y, z), a, b, c);
+        GeometricObject *box = new Box(center, a, b, c);
         box->set_material(m);
         world->add_object(box);
         break;
     }
     case PYRAMID:
     {
+        double a = str_to_double((ui->pyramid_a->text()), ok1);
+        double h = str_to_double((ui->pyramid_h->text()), ok2);
+        if (!ok1 || !ok2)
+            return;
+        name = "пирамида № " + QString("%1").arg(objects_count[PYRAMID]);
+        objects_count[PYRAMID]++;
+        ui->listWidget_2->addItem(name);
+
+        GeometricObject *pyramid = new Pyramid(center, a, h);
+        pyramid->set_material(m);
+        world->add_object(pyramid);
         break;
     }
     }

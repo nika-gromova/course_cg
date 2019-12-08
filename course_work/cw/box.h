@@ -14,6 +14,8 @@ public:
 
     ~Box(void);
 
+    Box &operator= (const Box &b);
+
     void set_center(const Point3D &c);
     void set_center(const double &x, const double &y, const double &z);
     void set_sizes(const double &len, const double &w, const double &h);
