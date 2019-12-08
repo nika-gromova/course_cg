@@ -6,6 +6,8 @@
 #include "vector3d.h"
 #include "ray.h"
 
+const double KEps = 0.001;
+
 class GeometricObject
 {
 private:
@@ -16,13 +18,13 @@ public:
     virtual ~GeometricObject(void);
 
     GeometricObject &operator= (const GeometricObject& obj);
-    virtual GeometricObject* clone(void) const = 0;
+    // virtual GeometricObject* clone(void) const = 0;
 
     void set_material(Material *m);
     Material* get_material(void) const;
 
-    virtual Vector3D calculate_normal(const Point3D &p) = 0;
-    virtual bool hit(const Ray &ray, double &tmin) = 0;
+    virtual bool hit(const Ray &ray, double &tmin, Ray &normal) = 0;
+    bool hit(const Ray &ray);
 };
 
 #endif // GEOMETRICOBJECT_H

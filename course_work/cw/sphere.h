@@ -19,7 +19,7 @@ public:
     void set_center(double x, double y, double z);
     void set_radius(double r);
 
-    bool hit(const Ray &ray, double &tmin);
+    bool hit(const Ray &ray, double &tmin, Ray &normal);
     Vector3D calculate_normal(const Point3D &p);
 
 private:

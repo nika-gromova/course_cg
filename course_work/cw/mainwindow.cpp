@@ -6,13 +6,15 @@
 #include <QKeyEvent>
 #include <QLocale>
 #include <QRegExp>
+#include <QMessageBox>
 
 #include "vector3d.h"
 #include "maths.h"
 #include "sphere.h"
+#include "box.h"
+#include "pyramid.h"
 #include "constants.h"
 
-const int key_enter = 16777220;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -52,6 +54,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->object_g->setValidator(&zero_one_valid);
     ui->object_b->setValidator(&zero_one_valid);
 
+    color_dialog = new QColorDialog(ui->choose_color_pushButton);
+
     // sphere
     ui->sphere_radius->setValidator(&double_valid);
 
@@ -80,29 +84,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     glass = Material(0.01, 0.20, 125, 0.79, 1.0 / 1.5);
     metal = Material(0.1, 0.7, 50, 0.0, 1.5); // плохо выглядит
-    //mirror = Material(0.7, 0.3, 500, 0.0, 1.5);
-    mirror = Material(0.0, 1.0, 50, 0.0, 1.5); // s больше
+    mirror = Material(0.0, 1.0, 50, 0.0, 1.5);
     ivory = Material(0.6, 0.4, 50, 0.0, 1.5);
     plastic = Material(0.8, 0.2, 100, 0.0, 1.5);
     rubber = Material(0.99, 0.01, 10, 0.0, 1.5);
     //ice = Material(0.0, 0.7, 10, 0.3, 0.752);
-
-    // ivory 0.878 0.694 0.517
-    // testing
-    /*
-    GeometricObject *first_sphere = new Sphere(Point3D(0.0, 0.0, 5.0), 2);
-    Material *m = new Material();
-    m->color = RED;
-    first_sphere->set_material(m);
-    GeometricObject *second_sphere = new Sphere(Point3D(0.0, -5.0, 3.0), 1);
-    Material *m2 = new Material();
-    m2->color = WHITE;
-    second_sphere->set_material(m2);
-
-    world->add_object(first_sphere);
-    world->add_object(second_sphere);
-    */
-    // end testing
 
     lights_count = 0;
 }
@@ -112,6 +98,51 @@ MainWindow::~MainWindow()
     delete world;
     delete canvas;
     delete ui;
+}
+
+double MainWindow::str_to_double(QString str, bool &r)
+{
+    r = true;
+    double ret;
+    bool ok = true;
+    if (str.isEmpty())
+        ret = 0;
+    else
+    {
+        ret = str.toDouble(&ok);
+        if (!ok)
+        {
+            r = false;
+            QMessageBox::warning(this, "Ошибка ввода", "Неверно введено значение. Введите вещественное число");
+        }
+    }
+    return ret;
+}
+
+void MainWindow::choose_material(Material *m, const int &index)
+{
+    switch (index) {
+    case GLASS:
+        (*m) = glass;
+        break;
+    case METAL:
+        (*m) = metal;
+        break;
+    case MIRROR:
+        (*m) = mirror;
+        break;
+    case IVORY:
+        (*m) = ivory;
+        break;
+    case PLASTIC:
+        (*m) = plastic;
+        break;
+    case RUBBER:
+        (*m) = rubber;
+        break;
+    default:
+        break;
+    }
 }
 
 void MainWindow::on_object_comboBox_activated(int index)
@@ -142,14 +173,32 @@ void MainWindow::on_object_comboBox_activated(int index)
 
 void MainWindow::on_light_add_pushButton_clicked()
 {
-    bool ok = false;
-    RGBColor cur_color(ui->light_r->text().toDouble(&ok), ui->light_g->text().toDouble(&ok), ui->light_b->text().toDouble(&ok));
-    Point3D position(ui->light_x_pos->text().toDouble(&ok), ui->light_y_pos->text().toDouble(&ok), ui->light_z_pos->text().toDouble(&ok));
-    Light *light = new Light(ui->light_intensity->text().toDouble(&ok), cur_color, position);
+    bool ok1, ok2, ok3;
+    double r = str_to_double(ui->light_r->text(), ok1);
+    double g = str_to_double(ui->light_g->text(), ok2);
+    double b = str_to_double(ui->light_b->text(), ok3);
+    if (!ok1 || !ok2 || !ok3)
+        return;
+    double x = str_to_double(ui->light_x_pos->text(), ok1);
+    double y = str_to_double(ui->light_y_pos->text(), ok2);
+    double z = str_to_double(ui->light_z_pos->text(), ok3);
+    if (!ok1 || !ok2 || !ok3)
+        return;
+
+    RGBColor cur_color(r, g, b);
+    Point3D position(x, y, z);
+
+    double I = str_to_double(ui->light_intensity->text(), ok1);
+    if (!ok1)
+        return;
+
+    Light *light = new Light(I, cur_color, position);
     world->add_light(light);
+
     QString name = "источник № " + QString("%1").arg(lights_count);
     ui->listWidget->addItem(name);
     lights_count++;
+
     world->render(zoom);
 }
 
@@ -190,67 +239,147 @@ void MainWindow::on_horizontalSlider_valueChanged(int value)
 
 void MainWindow::on_doubleSpinBox_valueChanged(double arg1)
 {
-    ui->horizontalSlider->setValue(arg1);
-    zoom = (int)(arg1);
+    zoom = static_cast<int>(arg1);
+    ui->horizontalSlider->setValue(zoom);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
 
-    if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return || event->key() == key_enter)
+    if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
     {
         int tmp = ui->horizontalSlider->value();
         world->render(tmp);
     }
 }
 
-
-
 void MainWindow::on_obj_add_pushButton_clicked()
 {
-    bool ok;
+    bool ok1, ok2, ok3;
+    double r = str_to_double(ui->object_r->text(), ok1);
+    double g = str_to_double(ui->object_g->text(), ok2);
+    double b = str_to_double(ui->object_b->text(), ok3);
+    double x, y, z;
+
+    if (!ok1 || !ok2 || !ok3)
+        return;
+
+    x = str_to_double(ui->x_pos->text(), ok1);
+    y = str_to_double(ui->y_pos->text(), ok2);
+    z = str_to_double(ui->z_pos->text(), ok3);
+
+    if (!ok1 || !ok2 || !ok3)
+        return;
+
     QString name;
 
     Material *m = new Material();
-
     int material_index = ui->matherial_comboBox->currentIndex();
-    switch (material_index) {
-    case GLASS:
-        (*m) = glass;
-        break;
-    case METAL:
-        (*m) = metal;
-        break;
-    case MIRROR:
-        (*m) = mirror;
-        break;
-    case IVORY:
-        (*m) = ivory;
-        break;
-    case PLASTIC:
-        (*m) = plastic;
-        break;
-    case RUBBER:
-        (*m) = rubber;
-        break;
-    default:
-        break;
-    }
-
-    RGBColor cur_color(ui->object_r->text().toDouble(&ok), ui->object_g->text().toDouble(&ok), ui->object_b->text().toDouble(&ok));
+    choose_material(m, material_index);
+    RGBColor cur_color(r, g, b);
     m->color = cur_color;
 
     int index = ui->object_comboBox->currentIndex();
     switch(index) {
     case SPHERE:
+    {
+        double r = str_to_double(ui->sphere_radius->text(), ok1);
+        if (!ok1)
+            return;
         name = "сфера № " + QString("%1").arg(objects_count[SPHERE]);
         objects_count[SPHERE]++;
         ui->listWidget_2->addItem(name);
-        GeometricObject *sphere = new Sphere(Point3D(ui->x_pos->text().toDouble(&ok), ui->y_pos->text().toDouble(&ok), ui->z_pos->text().toDouble(&ok)), ui->sphere_radius->text().toDouble(&ok));
+        GeometricObject *sphere = new Sphere(Point3D(x, y, z), r);
         sphere->set_material(m);
         world->add_object(sphere);
         break;
     }
+    case BOX:
+    {
+        double a = str_to_double((ui->box_length->text()), ok1);
+        double b = str_to_double((ui->box_width->text()), ok2);
+        double c = str_to_double((ui->box_height->text()), ok3);
+        if (!ok1 || !ok2 || !ok3)
+            return;
+        name = "коробка № " + QString("%1").arg(objects_count[BOX]);
+        objects_count[BOX]++;
+        ui->listWidget_2->addItem(name);
+
+        GeometricObject *box = new Box(Point3D(x, y, z), a, b, c);
+        box->set_material(m);
+        world->add_object(box);
+        break;
+    }
+    case PYRAMID:
+    {
+        break;
+    }
+    }
 
     world->render(zoom);
+}
+
+bool MainWindow::choose_color(double &r, double &g, double &b)
+{
+    QColor color = QColorDialog::getColor(Qt::white, this, "Веберете цвет");
+    if (!color.isValid())
+        return false;
+
+    int ri = 0, gi = 0, bi = 0;
+    color.getRgb(&ri, &gi, &bi);
+    r = ri / 255.0;
+    g = gi / 255.0;
+    b = bi / 255.0;
+    return true;
+}
+
+void MainWindow::on_choose_color_pushButton_clicked()
+{
+    double r, g, b;
+    if (choose_color(r, g, b))
+    {
+        ui->object_r->setText(QString().setNum(r, 'g', 2));
+        ui->object_g->setText(QString().setNum(g, 'g', 2));
+        ui->object_b->setText(QString().setNum(b, 'g', 2));
+    }
+}
+
+void MainWindow::on_choose_color_pushButton_2_clicked()
+{
+    double r, g, b;
+    if (choose_color(r, g, b))
+    {
+        ui->light_r->setText(QString().setNum(r, 'g', 2));
+        ui->light_g->setText(QString().setNum(g, 'g', 2));
+        ui->light_b->setText(QString().setNum(b, 'g', 2));
+    }
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *event)
+{
+    if (ui->mouse_obj_checkBox->isChecked() || ui->mouse_light_checkBox->isChecked())
+    {
+        QPoint p = canvas->mapFromGlobal(QCursor::pos());
+        int canvas_width = ui->draw_widget->width();
+        int canvas_height = ui->draw_widget->height();
+        if (p.x() >= 0 && p.x() <= canvas_width && p.y() >= 0 && p.y() <= canvas_height)
+        {
+            double x = p.x() - (canvas_width - 1.0) * 0.5;
+            double y = p.y() - (canvas_height - 1.0) * 0.5;
+            x /= 100.0;
+            y /= 100.0;
+            if (ui->mouse_obj_checkBox->isChecked())
+            {
+                ui->x_pos->setText(QString().setNum(x, 'g', 3));
+                ui->y_pos->setText(QString().setNum(y, 'g', 3));
+                ui->z_pos->setText("0");
+            }
+            if (ui->mouse_light_checkBox->isChecked())
+            {
+                ui->light_x_pos->setText(QString().setNum(x, 'g', 3));
+                ui->light_y_pos->setText(QString().setNum(y, 'g', 3));
+                ui->light_z_pos->setText("0");
+            }
+        }
+    }
 }

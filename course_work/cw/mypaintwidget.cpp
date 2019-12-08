@@ -6,7 +6,7 @@ MyPaintWidget::MyPaintWidget(QWidget *parent) : QWidget(parent)
 
 void MyPaintWidget::color_pixel(int x, int y, RGBColor &color)
 {
-    QColor cur_color((int)round(color.r * 255), (int)round(color.g * 255), (int)(round(color.b * 255)));
+    QColor cur_color(static_cast<int>(round(color.r * 255)), static_cast<int>(round(color.g * 255)), static_cast<int>(round(color.b * 255)));
     QPainter painter(&my_image);
     painter.setPen(cur_color);
     painter.drawPoint(x, y);
