@@ -1,20 +1,18 @@
 #include "cone.h"
 const double kHugeValue	= 1.0E10;
 
-Cone::Cone(void) : GeometricObject(), center(Point3D(0.0, 0.5, 0.0)), radius(1.0), height(1.0), dradius(1.0),
-    dheight(1.0), k(1.0), hr(1.0), base(Disk(center, radius, Vector3D(0, 1, 0))) {}
+Cone::Cone(void) : GeometricObject(), center(Point3D(0.0, 0.5, 0.0)), radius(1.0), height(1.0), k(1.0),
+    hr(1.0), base(Disk(center, radius, Vector3D(0, 1, 0))) {}
 
 Cone::Cone(const Point3D &cen, const double &r, const double &h) : GeometricObject(), center(cen), radius(r), height(h)
 {
-    dradius = radius * radius;
-    dheight = height * height;
-    k = dradius / dheight;
+    k = radius * radius / height * height;
     hr = height / radius;
     base = Disk(center, r, Vector3D(0, 1, 0));
 }
 
-Cone::Cone(const Cone &c) : GeometricObject(), center(c.center), radius(c.radius), height(c.height), dradius(c.dradius),
-    dheight(c.dheight), k(c.k), base(c.base) {}
+Cone::Cone(const Cone &c) : GeometricObject(), center(c.center), radius(c.radius), height(c.height),
+    k(c.k), hr(c.hr), base(c.base) {}
 
 Cone::~Cone() {}
 
@@ -27,8 +25,6 @@ Cone &Cone::operator=(const Cone &c)
     center = c.center;
     radius = c.radius;
     height = c.height;
-    dradius = c.dradius;
-    dheight = c.dheight;
     k = c.k;
     hr = height / radius;
     base = c.base;
@@ -44,16 +40,14 @@ void Cone::set_center(const Point3D &cen)
 void Cone::set_base_radius(const double &r)
 {
     radius = r;
-    dradius = r * r;
-    k = dradius / dheight;
+    k = radius * radius / height * height;
     hr = height / radius;
 }
 
 void Cone::set_height(const double &h)
 {
     height = h;
-    dheight = h * h;
-    k = dradius / dheight;
+    k = radius * radius / height * height;
     hr = height / radius;
 }
 
@@ -85,8 +79,7 @@ bool Cone::hit(const Ray &ray, double &tmin, Ray &normal)
            if (p.y <= center.y && p.y >= (center.y - height))
            {
                tmin = t1;
-               normal.direction = (Vector3D(2 * hr * (hr * p.x - center.x), -2 * (p.y + height - center.y),
-                                            2 * hr * (hr * p.z - center.z)).normalize());
+               normal.direction = this->calculate_normal(p);
                normal.origin = p;
                hit = true;
            }
@@ -97,8 +90,7 @@ bool Cone::hit(const Ray &ray, double &tmin, Ray &normal)
            if (p.y <= center.y && p.y >= (center.y - height))
            {
                tmin = t2;
-               normal.direction = (Vector3D(2 * hr * (hr * p.x - center.x), -2 * (p.y + height - center.y),
-                                            2 * hr * (hr * p.z - center.z)).normalize());
+               normal.direction = this->calculate_normal(p);
                normal.origin = p;
                hit = true;
            }
@@ -114,5 +106,12 @@ bool Cone::hit(const Ray &ray, double &tmin, Ray &normal)
     }
 
     return hit;
+}
+
+Vector3D Cone::calculate_normal(const Point3D &p)
+{
+    Vector3D normal = Vector3D(2 * (hr * p.x - center.x), (-2) * (p.y + height - center.y),
+                               2 * (hr * p.z - center.z));
+    return normal.get_normal();
 }
 

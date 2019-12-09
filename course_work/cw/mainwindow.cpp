@@ -416,13 +416,11 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             {
                 ui->x_pos->setText(QString().setNum(x, 'g', 3));
                 ui->y_pos->setText(QString().setNum(y, 'g', 3));
-                ui->z_pos->setText("0");
             }
             if (ui->mouse_light_checkBox->isChecked())
             {
                 ui->light_x_pos->setText(QString().setNum(x, 'g', 3));
                 ui->light_y_pos->setText(QString().setNum(y, 'g', 3));
-                ui->light_z_pos->setText("0");
             }
         }
     }

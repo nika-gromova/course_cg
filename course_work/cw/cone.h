@@ -20,13 +20,13 @@ public:
     void set_height(const double &h);
 
     bool hit(const Ray &ray, double &tmin, Ray &normal);
+    Vector3D calculate_normal(const Point3D &p);
 
 private:
     Point3D center; // center of a base
     double radius;
     double height;
-    double dradius;
-    double dheight;
+
     double k;
     double hr;
     Disk base;
