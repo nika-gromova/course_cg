@@ -1,6 +1,6 @@
 #include "world.h"
 #include <iostream>
-
+// #include <thread>
 
 World::World(int w, int h, int s = 1): canvas_height(h), canvas_width(w), pixel_size(s)
 {

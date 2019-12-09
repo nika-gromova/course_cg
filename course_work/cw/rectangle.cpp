@@ -8,6 +8,7 @@ Rectangle::Rectangle() : GeometricObject(), p0(Point3D(-1, 0, -1)), da(1), db(1)
 Rectangle::Rectangle(const Point3D &point, const double &length, const double &width, const Vector3D &normal) : GeometricObject(),
     p0(point), da(length * length), db(width * width), local_normal(normal)
 {
+    local_normal.normalize();
     this->assign_vect(length, width);
 }
 
@@ -46,6 +47,7 @@ void Rectangle::set_sizes(const double &length, const double &width)
 void Rectangle::set_normal(const Vector3D &normal)
 {
     local_normal = normal;
+    local_normal.normalize();
 }
 
 bool Rectangle::hit(const Ray &ray, double &tmin, Ray &normal)

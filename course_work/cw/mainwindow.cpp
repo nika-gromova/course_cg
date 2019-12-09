@@ -13,6 +13,7 @@
 #include "sphere.h"
 #include "box.h"
 #include "pyramid.h"
+#include "cylinder.h"
 #include "constants.h"
 
 
@@ -324,6 +325,21 @@ void MainWindow::on_obj_add_pushButton_clicked()
         GeometricObject *pyramid = new Pyramid(center, a, h);
         pyramid->set_material(m);
         world->add_object(pyramid);
+        break;
+    }
+    case CYLINDER:
+    {
+        double r = str_to_double((ui->cylinder_radius->text()), ok1);
+        double h = str_to_double((ui->cylinder_height->text()), ok2);
+        if (!ok1 || !ok2)
+            return;
+        name = "цилиндр № " + QString("%1").arg(objects_count[CYLINDER]);
+        objects_count[CYLINDER]++;
+        ui->listWidget_2->addItem(name);
+
+        GeometricObject *cylinder = new Cylinder(center, h, r);
+        cylinder->set_material(m);
+        world->add_object(cylinder);
         break;
     }
     }

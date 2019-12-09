@@ -8,6 +8,7 @@ Triangle::Triangle(const Point3D &a, const Point3D &b, const Point3D &c) : Geome
     v1 = b;
     v2 = c;
     local_normal = ((v2 - v0) ^ (v1 - v0));
+    local_normal.normalize();
 }
 
 Triangle::Triangle(const Triangle &t) : GeometricObject()

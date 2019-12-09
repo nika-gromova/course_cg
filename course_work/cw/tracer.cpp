@@ -36,7 +36,7 @@ Vector3D compute_refracted(const Vector3D &light_dir, const Vector3D &normal, co
     return result;
 }
 
-RGBColor Tracer::trace_ray(const Ray &ray, WorldData &data, int depth)
+RGBColor Tracer::trace_ray(const Ray &ray, const WorldData &data, int depth)
 {
     double tmin = kHugeValue;
     int num_obj = data.objects.size();
@@ -100,9 +100,9 @@ RGBColor Tracer::trace_ray(const Ray &ray, WorldData &data, int depth)
 
 }
 
-RGBColor Tracer::compute_intensity(WorldData &data, const Point3D &intersect_point, const Vector3D &normal, const Vector3D &to_the_camera, const Material *material)
+RGBColor Tracer::compute_intensity(const WorldData &data, const Point3D &intersect_point, const Vector3D &normal, const Vector3D &to_the_camera, const Material *material)
 {
-    std::vector<Light *> &lights = data.lights;
+    const std::vector<Light *> &lights = data.lights;
 
     RGBColor diffuse_intensity(0.0);
     RGBColor reflect_intensity(0.0);

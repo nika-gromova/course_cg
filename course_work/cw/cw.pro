@@ -44,7 +44,10 @@ SOURCES += \
         mypaintwidget.cpp \
         worlddata.cpp \
     light.cpp \
-    rectangle.cpp
+    rectangle.cpp \
+    cone.cpp \
+    cylinder.cpp \
+    disk.cpp
 
 HEADERS += \
     box.h \
@@ -67,7 +70,10 @@ HEADERS += \
     mypaintwidget.h \
     worlddata.h \
     light.h \
-    rectangle.h
+    rectangle.h \
+    cone.h \
+    cylinder.h \
+    disk.h
 
 FORMS += \
         mainwindow.ui
