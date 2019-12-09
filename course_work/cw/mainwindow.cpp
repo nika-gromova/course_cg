@@ -14,6 +14,7 @@
 #include "box.h"
 #include "pyramid.h"
 #include "cylinder.h"
+#include "cone.h"
 #include "constants.h"
 
 
@@ -340,6 +341,21 @@ void MainWindow::on_obj_add_pushButton_clicked()
         GeometricObject *cylinder = new Cylinder(center, h, r);
         cylinder->set_material(m);
         world->add_object(cylinder);
+        break;
+    }
+    case CONE:
+    {
+        double r = str_to_double((ui->cone_radius->text()), ok1);
+        double h = str_to_double((ui->cone_height->text()), ok2);
+        if (!ok1 || !ok2)
+            return;
+        name = "конус № " + QString("%1").arg(objects_count[CONE]);
+        objects_count[CONE]++;
+        ui->listWidget_2->addItem(name);
+
+        GeometricObject *cone = new Cone(center, r, h);
+        cone->set_material(m);
+        world->add_object(cone);
         break;
     }
     }

@@ -25,6 +25,9 @@ private:
     Point3D center; // center of a base
     double radius;
     double height;
+    double dradius;
+    double dheight;
+    double k;
     Disk base;
 };
 
