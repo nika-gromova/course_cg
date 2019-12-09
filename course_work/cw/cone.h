@@ -28,6 +28,7 @@ private:
     double dradius;
     double dheight;
     double k;
+    double hr;
     Disk base;
 };
 

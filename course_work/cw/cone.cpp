@@ -2,13 +2,14 @@
 const double kHugeValue	= 1.0E10;
 
 Cone::Cone(void) : GeometricObject(), center(Point3D(0.0, 0.5, 0.0)), radius(1.0), height(1.0), dradius(1.0),
-    dheight(1.0), k(1.0), base(Disk(center, radius, Vector3D(0, 1, 0))) {}
+    dheight(1.0), k(1.0), hr(1.0), base(Disk(center, radius, Vector3D(0, 1, 0))) {}
 
 Cone::Cone(const Point3D &cen, const double &r, const double &h) : GeometricObject(), center(cen), radius(r), height(h)
 {
     dradius = radius * radius;
     dheight = height * height;
     k = dradius / dheight;
+    hr = height / radius;
     base = Disk(center, r, Vector3D(0, 1, 0));
 }
 
@@ -29,6 +30,7 @@ Cone &Cone::operator=(const Cone &c)
     dradius = c.dradius;
     dheight = c.dheight;
     k = c.k;
+    hr = height / radius;
     base = c.base;
 
     return (*this);
@@ -44,6 +46,7 @@ void Cone::set_base_radius(const double &r)
     radius = r;
     dradius = r * r;
     k = dradius / dheight;
+    hr = height / radius;
 }
 
 void Cone::set_height(const double &h)
@@ -51,17 +54,18 @@ void Cone::set_height(const double &h)
     height = h;
     dheight = h * h;
     k = dradius / dheight;
+    hr = height / radius;
 }
 
 bool Cone::hit(const Ray &ray, double &tmin, Ray &normal)
 {
     double ox = ray.origin.x - center.x;
     double oz = ray.origin.z - center.z;
-    double oy = ray.origin.y;
-    double dx = ray.direction.z, dy = ray.direction.y, dz = ray.direction.z;
+    double oy = ray.origin.y - center.y + height;
+    double dx = ray.direction.x, dy = ray.direction.y, dz = ray.direction.z;
     double a = dx * dx - k * dy * dy + dz * dz;
-    double b = 2 * (ox * dx - oy * dy + height * dy + oz * dz);
-    double c = ox * ox + k * oy * oy - dradius + 2 * k * height * oy + oz * oz;
+    double b = 2 * (ox * dx - k * oy * dy + oz * dz);
+    double c = ox * ox - k * oy * oy + oz * oz;
 
     tmin = kHugeValue;
     Point3D p;
@@ -81,8 +85,8 @@ bool Cone::hit(const Ray &ray, double &tmin, Ray &normal)
            if (p.y <= center.y && p.y >= (center.y - height))
            {
                tmin = t1;
-               normal.direction = (Vector3D(2 * height * p.x / radius, 2 * (height - p.y),
-                                            2 * height * p.z / radius)).normalize();
+               normal.direction = (Vector3D(2 * hr * (hr * p.x - center.x), -2 * (p.y + height - center.y),
+                                            2 * hr * (hr * p.z - center.z)).normalize());
                normal.origin = p;
                hit = true;
            }
@@ -93,8 +97,8 @@ bool Cone::hit(const Ray &ray, double &tmin, Ray &normal)
            if (p.y <= center.y && p.y >= (center.y - height))
            {
                tmin = t2;
-               normal.direction = (Vector3D(2 * height * p.x / radius, 2 * (height - p.y),
-                                            2 * height * p.z / radius)).normalize();
+               normal.direction = (Vector3D(2 * hr * (hr * p.x - center.x), -2 * (p.y + height - center.y),
+                                            2 * hr * (hr * p.z - center.z)).normalize());
                normal.origin = p;
                hit = true;
            }
