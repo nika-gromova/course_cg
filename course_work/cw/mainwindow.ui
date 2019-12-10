@@ -89,7 +89,7 @@
       </font>
      </property>
      <property name="currentIndex">
-      <number>4</number>
+      <number>5</number>
      </property>
      <widget class="QWidget" name="sphere">
       <widget class="QWidget" name="verticalLayoutWidget_3">
@@ -609,7 +609,7 @@
              </font>
             </property>
             <property name="text">
-             <string>внутренний радиус</string>
+             <string>радиус направляющей</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -624,7 +624,7 @@
              </font>
             </property>
             <property name="text">
-             <string>внешний радиус</string>
+             <string>радиус образующей</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -636,7 +636,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_12">
           <item>
-           <widget class="QLineEdit" name="tori_inner_radius">
+           <widget class="QLineEdit" name="tori_outer_radius">
             <property name="font">
              <font>
               <pointsize>11</pointsize>
@@ -651,7 +651,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="tori_outer_radius">
+           <widget class="QLineEdit" name="tori_inner_radius">
             <property name="font">
              <font>
               <pointsize>11</pointsize>

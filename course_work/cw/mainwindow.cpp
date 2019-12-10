@@ -15,6 +15,7 @@
 #include "pyramid.h"
 #include "cylinder.h"
 #include "cone.h"
+#include "tori.h"
 #include "constants.h"
 
 
@@ -91,6 +92,7 @@ MainWindow::MainWindow(QWidget *parent) :
     plastic = Material(0.8, 0.2, 100, 0.0, 1.5);
     rubber = Material(0.99, 0.01, 10, 0.0, 1.5);
     //ice = Material(0.0, 0.7, 10, 0.3, 0.752);
+    world->draw_widget->repaint();
 
     lights_count = 0;
 }
@@ -356,6 +358,21 @@ void MainWindow::on_obj_add_pushButton_clicked()
         GeometricObject *cone = new Cone(center, r, h);
         cone->set_material(m);
         world->add_object(cone);
+        break;
+    }
+    case TORI:
+    {
+        double a = str_to_double((ui->tori_outer_radius->text()), ok1);
+        double b = str_to_double((ui->tori_inner_radius->text()), ok1);
+        if (!ok1 || !ok2)
+            return;
+        name = "тор № " + QString("%1").arg(objects_count[TORI]);
+        objects_count[TORI]++;
+        ui->listWidget_2->addItem(name);
+
+        GeometricObject *tori = new Tori(center, a, b);
+        tori->set_material(m);
+        world->add_object(tori);
         break;
     }
     }

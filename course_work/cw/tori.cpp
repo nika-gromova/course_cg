@@ -1,4 +1,7 @@
 #include "tori.h"
+#include "maths.h"
+
+const double kHugeValue	= 1.0E10;
 
 Tori::Tori(void) : GeometricObject(), center(Point3D(0.0)), a(2.0), b(1.0) {}
 
@@ -47,15 +50,56 @@ bool Tori::hit(const Ray &ray, double &tmin, Ray &normal)
 
     double dox = ox * ox, doy = oy * oy, doz = oz * oz;
     double ddx = dx * dx, ddy = dy * dy, ddz = dz * dz;
-    double dorig = dox + doy + doz - (a * a + b * b) * (a * a + b * b);
-    double dsum = ox * dx + oy * dy + oz * dz;
+    double dorig = dox + doy + doz - (a * a + b * b);
+    double coordssum = ox * dx + oy * dy + oz * dz;
     double ddir = ddx + ddy + ddz;
 
-    double c4 = ddir * ddir;
-    double c3 = 4 * ddir * dsum;
-    double c2 = 2 * ddir * ddir + 4 * dsum * dsum + 4 * a * a * dy * dy;
-    double c1 = 4 * dorig * dsum + 8 * a * a * oy * dy;
-    double c0 = 4 * dorig * dorig - 4 * a * a * (b * b - oy * oy);
-    return false;
+    double coeffs[5];
+    double roots[4];
+
+    coeffs[4] = ddir * ddir;
+    coeffs[3] = 4 * ddir * coordssum;
+    coeffs[2] = 2 * ddir * dorig + 4 * coordssum * coordssum + 4 * a * a * dy * dy;
+    coeffs[1] = 4 * dorig * coordssum + 8 * a * a * oy * dy;
+    coeffs[0] = dorig * dorig - 4 * a * a * (b * b - oy * oy);
+
+    int res = SolveQuartic(coeffs, roots);
+
+    bool hit = false;
+    double min_t = kHugeValue;
+
+    if (!res)
+        return false;
+
+    for (auto i = 0; i < res; i++)
+    {
+        if (roots[i] > KEps && roots[i] < min_t)
+        {
+            hit = true;
+            min_t = roots[i];
+        }
+    }
+
+    if (!hit)
+        return false;
+
+    tmin = min_t;
+    normal.origin = ray.origin + (ray.direction * tmin);
+    normal.direction = this->calculate_normal(normal.origin);
+
+    return true;
+}
+
+Vector3D Tori::calculate_normal(const Point3D &p)
+{
+    double sum_squared = p.x * p.x + p.y * p.y + p.z * p.z - a * a - b * b;
+    double da = 2 * a * a;
+    Vector3D normal;
+    normal.x = 4 * p.x * sum_squared;
+    normal.y = 4 * p.y * (sum_squared + da);
+    normal.z = 4 * p.z * sum_squared;
+
+    normal.normalize();
+    return normal;
 }
 

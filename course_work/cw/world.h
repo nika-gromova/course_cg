@@ -14,6 +14,8 @@
 class World
 {
 public:
+    MyPaintWidget *draw_widget;
+
     World(int w, int h, int s);
     ~World();
 
@@ -32,8 +34,6 @@ private:
     int canvas_width;
     int pixel_size;
     WorldData data;
-
-    MyPaintWidget *draw_widget;
 };
 
 #endif // WORLD_H
