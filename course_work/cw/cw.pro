@@ -30,6 +30,7 @@ SOURCES += \
         point2d.cpp \
         point3d.cpp \
     pyramid.cpp \
+    tori.cpp \
     triangle.cpp \
         vector3d.cpp \
         ray.cpp \
@@ -55,6 +56,7 @@ HEADERS += \
     point3d.h \
     point2d.h \
     pyramid.h \
+    tori.h \
     triangle.h \
     vector3d.h \
     ray.h \
