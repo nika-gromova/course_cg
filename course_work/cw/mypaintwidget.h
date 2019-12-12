@@ -14,7 +14,7 @@ private:
     QImage my_image;
 public:
     explicit MyPaintWidget(QWidget *parent = nullptr);
-    void color_pixel(int x, int y, RGBColor &color);
+    void color_pixel(int x, int y, RGBColor color);
     void set_Qimage(int width, int height);
     void draw_line(int x1, int y1, int x2, int y2);
 

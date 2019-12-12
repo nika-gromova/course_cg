@@ -120,9 +120,11 @@ RGBColor Tracer::compute_intensity(const WorldData &data, const Point3D &interse
     double diffuse = material->diffuse_coef;
     double reflect = material->reflect_coef;
 
+    bool shadow;
+
     for (auto i = 0; i < data.lights.size(); i++)
     {
-        bool shadow = false;
+        shadow = false;
         if (i == 1)
             cos_alpha = 0;
         light_ray.direction = data.lights[i]->get_light_ray(intersect_point);

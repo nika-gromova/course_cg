@@ -4,7 +4,7 @@ MyPaintWidget::MyPaintWidget(QWidget *parent) : QWidget(parent)
 {
 }
 
-void MyPaintWidget::color_pixel(int x, int y, RGBColor &color)
+void MyPaintWidget::color_pixel(int x, int y, RGBColor color)
 {
     my_image.setPixel(x, y, qRgb(color.r * 255, color.g * 255, color.b * 255));
 }
