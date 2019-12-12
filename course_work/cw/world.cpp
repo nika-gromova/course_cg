@@ -15,6 +15,8 @@ World::World(int w, int h, int s = 1): canvas_height(h), canvas_width(w), pixel_
     data.background_color = BLACK;
     draw_widget = nullptr;
     tracer = new Tracer();
+    canvas_width--;
+    canvas_height--;
     x_coef = (canvas_width - 1.0) * 0.5;
     y_coef = (canvas_height - 1.0) * 0.5;
 }
@@ -37,8 +39,29 @@ void one_ray(int x, int y, const Ray &ray, Tracer *tracer, MyPaintWidget *draw_w
     if (draw_widget)
         draw_widget->color_pixel(x, y, pixel_color);
 }
-
-
+/*
+void World::render(int zoom)
+{
+    Ray ray;
+    ray.origin = Point3D(0, 0, zoom);
+    RGBColor pixel_color;
+    double r, c;
+    for (int x = 0; x <= canvas_width; x++ )
+    {
+        for (int y = 0; y <= canvas_height; y++ )
+        {
+            r = pixel_size * (x - x_coef);
+            c = pixel_size * (y - y_coef);
+            ray.direction = Vector3D((r * vf.width) / canvas_width, (c * vf.height) / canvas_height, vf.d);
+            ray.direction.normalize();
+            pixel_color = tracer->trace_ray(ray, data);
+            if (draw_widget)
+                draw_widget->color_pixel(x, y, pixel_color);
+        }
+    }
+    draw_widget->repaint();
+}
+*/
 
 void World::render(int zoom)
 {
@@ -61,6 +84,7 @@ void World::render(int zoom)
     }
     draw_widget->repaint();
 }
+
 
 void World::set_my_paint_widget(MyPaintWidget *dw)
 {
@@ -88,9 +112,9 @@ void World::render_coloumns(World *w, thread_params p, int z)
     ray.origin = Point3D(0, 0, z);
     RGBColor pixel_color;
     double r, c;
-    for (int x = p.start; x <= p.end; x ++)
+    for (int x = p.start; x < p.end; x++ )
     {
-        for (int y = 0; y <= w->canvas_height; y ++)
+        for (int y = 0; y <= w->canvas_height; y++ )
         {
             r = w->pixel_size * (x - w->x_coef);
             c = w->pixel_size * (y - w->y_coef);

@@ -92,14 +92,13 @@ bool Tori::hit(const Ray &ray, double &tmin, Ray &normal)
 
 Vector3D Tori::calculate_normal(const Point3D &p)
 {
-    double ox = p.x - center.x, oy = p.y - center.y, oz =p.z - center.z;
+    double ox = p.x - center.x, oy = p.y - center.y, oz = p.z - center.z;
     double sum_squared = ox * ox + oy * oy + oz * oz - a * a - b * b;
-    double da = 2 * a * a;
+    double da = 2.0 * a * a;
     Vector3D normal;
-    normal.x = 4 * ox * (sum_squared);
-    normal.y = 4 * oy * (sum_squared + da);
-    normal.z = 4 * oz * (sum_squared);
-
+    normal.x = 4.0 * ox * (sum_squared);
+    normal.y = 4.0 * oy * (sum_squared + da);
+    normal.z = 4.0 * oz * (sum_squared);
     normal.normalize();
     return normal;
 }
