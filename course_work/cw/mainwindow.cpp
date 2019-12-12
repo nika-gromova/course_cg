@@ -35,7 +35,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->object_comboBox->addItem(tr("тор"));
     ui->stackedWidget->setCurrentWidget(ui->sphere);
 
-    ui->sphere_pos_pushButton->setToolTip("положение: <b>центр</b> сферы.\n");
+    ui->sphere_pos_pushButton->setToolTip("<img src=':/files/images/sphere.png'>");
+    ui->box_pos_pushButton->setToolTip("<img src=':/files/images/box.jpg'>");
+    ui->pyramid_pos_pushButton->setToolTip("<img src=':/files/images/pyramid.jpg'>");
+    ui->cone_pos_pushButton->setToolTip("<img src=':/files/images/cone.jpg'>");
+    ui->cylinder_pos_pushButton->setToolTip("<img src=':/files/images/cylinder.jpg'>");
+    ui->tori_pos_pushButton->setToolTip("<img src=':/files/images/tori.jpg'>");
 
     ui->matherial_comboBox->addItem(tr("стекло"));
     ui->matherial_comboBox->addItem(tr("металл"));
@@ -67,6 +72,22 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->box_width->setValidator(&double_valid);
     ui->box_height->setValidator(&double_valid);
 
+    // pyramid
+    ui->pyramid_a->setValidator(&double_valid);
+    ui->pyramid_h->setValidator(&double_valid);
+
+    // cone
+    ui->cone_height->setValidator(&double_valid);
+    ui->cone_radius->setValidator(&double_valid);
+
+    // cylinder
+    ui->cylinder_height->setValidator(&double_valid);
+    ui->cylinder_radius->setValidator(&double_valid);
+
+    // tori
+    ui->tori_outer_radius->setValidator(&double_valid);
+    ui->tori_inner_radius->setValidator(&double_valid);
+
     // lights
     ui->light_x_pos->setValidator(&double_valid);
     ui->light_y_pos->setValidator(&double_valid);
@@ -86,12 +107,12 @@ MainWindow::MainWindow(QWidget *parent) :
     zoom = -10;
 
     glass = Material(0.01, 0.20, 125, 0.79, 1.0 / 1.5);
-    metal = Material(0.1, 0.7, 50, 0.0, 1.5); // плохо выглядит
+    metal = Material(0.1, 0.7, 50, 0.0, 1.5);
     mirror = Material(0.0, 1.0, 50, 0.0, 1.5);
     ivory = Material(0.6, 0.4, 50, 0.0, 1.5);
     plastic = Material(0.8, 0.2, 100, 0.0, 1.5);
     rubber = Material(0.99, 0.01, 10, 0.0, 1.5);
-    //ice = Material(0.0, 0.7, 10, 0.3, 0.752);
+
     world->draw_widget->repaint();
 
     lights_count = 0;

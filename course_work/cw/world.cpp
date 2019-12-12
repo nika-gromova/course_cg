@@ -1,12 +1,22 @@
 #include "world.h"
-#include <iostream>
+
 #include <thread>
+#include <mutex>
+#include <chrono>
+
 #define THREADS_COUNT 4
+
+std::mutex mtx;
+std::vector<std::thread> threads(THREADS_COUNT);
+
+
 World::World(int w, int h, int s = 1): canvas_height(h), canvas_width(w), pixel_size(s)
 {
     data.background_color = BLACK;
     draw_widget = nullptr;
     tracer = new Tracer();
+    x_coef = (canvas_width - 1.0) * 0.5;
+    y_coef = (canvas_height - 1.0) * 0.5;
 }
 
 World::~World()
@@ -19,44 +29,35 @@ void World::add_object(GeometricObject *obj)
     data.objects.push_back(obj);
 }
 
+
 void one_ray(int x, int y, const Ray &ray, Tracer *tracer, MyPaintWidget *draw_widget,
              const WorldData &data)
 {
     RGBColor pixel_color = tracer->trace_ray(ray, data);
     if (draw_widget)
-    {
         draw_widget->color_pixel(x, y, pixel_color);
-    }
 }
+
+
 
 void World::render(int zoom)
 {
-    RGBColor pixel_color;
-    Ray ray;
-    ray.origin = Point3D(0, 0, zoom);
-    double x_coef = (canvas_width - 1.0) * 0.5;
-    double y_coef = (canvas_height - 1.0) * 0.5;
-    double r, c;
-    std::vector <std::thread> working_threads;
-    for (int x = 0; x <= canvas_width; x ++)
+    int start = 0;
+    int end = 0;
+    int step = canvas_width / THREADS_COUNT;
+    thread_params params;
+
+    for (auto i = 0; i < THREADS_COUNT; i++)
     {
-        for (int y = 0; y <= canvas_height; y += THREADS_COUNT)
-        {
-            for (auto i = 0; i < THREADS_COUNT; i++)
-            {
-                r = pixel_size * (x - x_coef);
-                c = pixel_size * (y + i - y_coef);
-                ray.direction = Vector3D((r * vf.width) / canvas_width, (c * vf.height) / canvas_height, vf.d);
-                ray.direction.normalize();
-
-                std::thread th(one_ray, x, y + i, std::ref(ray), tracer, std::ref(draw_widget), data);
-                working_threads.push_back(th);
-            }
-            for (auto i = 0; i < THREADS_COUNT; i++)
-                working_threads[i].join();
-            //pixel_color = tracer->trace_ray(ray, data);
-
-        }
+        end = start + step;
+        params.start = start;
+        params.end = end;
+        threads[i] = std::thread(&World::render_coloumns, this, this, params, zoom);
+        start += step;
+    }
+    for (auto i = 0; i < THREADS_COUNT; i++)
+    {
+        threads[i].join();
     }
     draw_widget->repaint();
 }
@@ -79,5 +80,26 @@ void World::add_light(Light *item)
 void World::remove_light(const int &index)
 {
     data.lights.erase(data.lights.begin() + index);
+}
+
+void World::render_coloumns(World *w, thread_params p, int z)
+{
+    Ray ray;
+    ray.origin = Point3D(0, 0, z);
+    RGBColor pixel_color;
+    double r, c;
+    for (int x = p.start; x <= p.end; x ++)
+    {
+        for (int y = 0; y <= w->canvas_height; y ++)
+        {
+            r = w->pixel_size * (x - w->x_coef);
+            c = w->pixel_size * (y - w->y_coef);
+            ray.direction = Vector3D((r * w->vf.width) / w->canvas_width, (c * w->vf.height) / w->canvas_height, w->vf.d);
+            ray.direction.normalize();
+            pixel_color = w->tracer->trace_ray(ray, data);
+            if (w->draw_widget)
+                w->draw_widget->color_pixel(x, y, pixel_color);
+        }
+    }
 }
 

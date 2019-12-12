@@ -10,6 +10,12 @@
 #include "mypaintwidget.h"
 #include "worlddata.h"
 
+struct thread_params
+{
+    int start;
+    int end;
+};
+
 
 class World
 {
@@ -26,12 +32,15 @@ public:
     void remove_object(const int &index);
     void add_light(Light *item);
     void remove_light(const int &index);
+    void render_coloumns(World *w, thread_params p, int z);
     Tracer *tracer;
 private:
     ViewFeild vf;
     int canvas_height;
     int canvas_width;
     int pixel_size;
+    double x_coef;
+    double y_coef;
     WorldData data;
 };
 

@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/files">
+        <file>images/sphere.png</file>
+        <file>images/box.jpg</file>
+        <file>images/pyramid.jpg</file>
+        <file>images/cone.jpg</file>
+        <file>images/cylinder.jpg</file>
+        <file>images/tori.jpg</file>
+    </qresource>
+</RCC>
