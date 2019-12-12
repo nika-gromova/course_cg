@@ -46,7 +46,7 @@ bool Disk::hit(const Ray &ray, double &tmin, Ray &normal)
     Point3D p = ray.origin + (ray.direction * t);
     Vector3D d = (p - center);
 
-    double check = d.length();
+    double check = d.squared_length();
     if (check > dradius)
         return false;
 

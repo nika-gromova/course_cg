@@ -26,7 +26,6 @@ public:
     void remove_object(const int &index);
     void add_light(Light *item);
     void remove_light(const int &index);
-
     Tracer *tracer;
 private:
     ViewFeild vf;

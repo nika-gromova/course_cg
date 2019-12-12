@@ -6,7 +6,7 @@ Cone::Cone(void) : GeometricObject(), center(Point3D(0.0, 0.5, 0.0)), radius(1.0
 
 Cone::Cone(const Point3D &cen, const double &r, const double &h) : GeometricObject(), center(cen), radius(r), height(h)
 {
-    k = radius * radius / height * height;
+    k = radius * radius / (height * height);
     hr = height / radius;
     base = Disk(center, r, Vector3D(0, 1, 0));
 }
@@ -40,14 +40,14 @@ void Cone::set_center(const Point3D &cen)
 void Cone::set_base_radius(const double &r)
 {
     radius = r;
-    k = radius * radius / height * height;
+    k = radius * radius / (height * height);
     hr = height / radius;
 }
 
 void Cone::set_height(const double &h)
 {
     height = h;
-    k = radius * radius / height * height;
+    k = radius * radius / (height * height);
     hr = height / radius;
 }
 
@@ -68,7 +68,6 @@ bool Cone::hit(const Ray &ray, double &tmin, Ray &normal)
     double t1 = 0.0, t2 = 0.0;
     double params[3] = {a, b, c};
     int res = solve_quadric(t1, t2, params);
-
     if (res)
     {
         // t1 - smaller; t2 - larger roots
@@ -110,8 +109,10 @@ bool Cone::hit(const Ray &ray, double &tmin, Ray &normal)
 
 Vector3D Cone::calculate_normal(const Point3D &p)
 {
-    Vector3D normal = Vector3D(2 * (hr * p.x - center.x), (-2) * (p.y + height - center.y),
-                               2 * (hr * p.z - center.z));
+    double ox = p.x - center.x;
+    double oy = p.y - center.y;
+    double oz = p.z - center.z;
+    Vector3D normal = Vector3D((2 * hr * hr * ox), (-2) * (oy + height), (2 * hr * hr * oz));
     return normal.get_normal();
 }
 

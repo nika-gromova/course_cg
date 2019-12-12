@@ -102,7 +102,7 @@ RGBColor Tracer::trace_ray(const Ray &ray, const WorldData &data, int depth)
 
 RGBColor Tracer::compute_intensity(const WorldData &data, const Point3D &intersect_point, const Vector3D &normal, const Vector3D &to_the_camera, const Material *material)
 {
-    const std::vector<Light *> &lights = data.lights;
+    // const std::vector<Light *> &lights = data.lights;
 
     RGBColor diffuse_intensity(0.0);
     RGBColor reflect_intensity(0.0);
@@ -120,17 +120,21 @@ RGBColor Tracer::compute_intensity(const WorldData &data, const Point3D &interse
     double diffuse = material->diffuse_coef;
     double reflect = material->reflect_coef;
 
-    bool shadow = false;
-
-    for (auto const &light : lights)
+    for (auto i = 0; i < data.lights.size(); i++)
     {
-        light_ray.direction = light->get_light_ray(intersect_point);
+        bool shadow = false;
+        if (i == 1)
+            cos_alpha = 0;
+        light_ray.direction = data.lights[i]->get_light_ray(intersect_point);
         light_ray.origin = intersect_point;
         distance = light_ray.direction.length();
-        current_intensity = light->get_light();
+        current_intensity = data.lights[i]->get_light();
 
         for (auto const &obj : data.objects)
-            shadow = shadow || (obj->hit(light_ray));
+        {
+            bool tmp = (obj->hit(light_ray));
+            shadow = shadow || tmp;
+        }
         if (shadow)
             continue;
 
