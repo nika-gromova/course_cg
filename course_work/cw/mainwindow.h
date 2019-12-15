@@ -46,6 +46,12 @@ private slots:
 
     void mousePressEvent(QMouseEvent *event);
 
+    void on_scene1_clicked();
+
+    void on_scene2_clicked();
+
+    void on_scene3_clicked();
+
 private:
     Ui::MainWindow *ui;
     QColorDialog *color_dialog;
@@ -64,6 +70,16 @@ private:
     Material ivory;
     Material plastic;
     Material rubber;
+
+    void clear_all(void);
+
+    void add_light(const Point3D &center, const RGBColor &color, const double &I);
+    void add_sphere(const Point3D &center, const double &r, Material *m);
+    void add_box(const Point3D &center, const double &a, const double &b, const double &c, Material *m);
+    void add_pyramid(const Point3D &center, const double &a, const double &h, Material *m);
+    void add_cone(const Point3D &center, const double &r, const double &h, Material *m);
+    void add_cylinder(const Point3D &center, const double &r, const double &h, Material *m);
+    void add_tori(const Point3D &center, const double &a, const double &b, Material *m);
 };
 
 #endif // MAINWINDOW_H

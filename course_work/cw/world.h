@@ -36,6 +36,7 @@ public:
     Tracer *tracer;
 
     int get_obj_size();
+    int get_light_size();
 
 private:
     ViewFeild vf;

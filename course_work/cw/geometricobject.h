@@ -10,7 +10,7 @@ const double KEps = 0.001;
 
 class GeometricObject
 {
-private:
+protected:
     Material *material_ptr;
 public:
     GeometricObject(void);
@@ -18,7 +18,6 @@ public:
     virtual ~GeometricObject(void);
 
     GeometricObject &operator= (const GeometricObject& obj);
-    // virtual GeometricObject* clone(void) const = 0;
 
     void set_material(Material *m);
     Material* get_material(void) const;

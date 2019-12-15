@@ -30,7 +30,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    std::cout << qVersion() << std::endl;
     ui->object_comboBox->addItem(tr("шар"));
     ui->object_comboBox->addItem(tr("параллелепипед"));
     ui->object_comboBox->addItem(tr("правильная четырехугольная пирамида"));
@@ -49,9 +48,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->matherial_comboBox->addItem(tr("стекло"));
     ui->matherial_comboBox->addItem(tr("металл"));
     ui->matherial_comboBox->addItem(tr("зеркало"));
-    ui->matherial_comboBox->addItem(tr("слоновая кость"));
     ui->matherial_comboBox->addItem(tr("пластик"));
     ui->matherial_comboBox->addItem(tr("резина"));
+    // ui->matherial_comboBox->addItem(tr("слоновая кость"));
 
 
     ui->horizontalSlider->setRange(-100, 100);
@@ -119,7 +118,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     world->draw_widget->repaint();
 
-    lights_count = 0;
+    lights_count = 0;    
 }
 
 MainWindow::~MainWindow()
@@ -221,12 +220,7 @@ void MainWindow::on_light_add_pushButton_clicked()
     if (!ok1)
         return;
 
-    Light *light = new Light(I, cur_color, position);
-    world->add_light(light);
-
-    QString name = "источник № " + QString("%1").arg(lights_count);
-    ui->listWidget->addItem(name);
-    lights_count++;
+    add_light(position, cur_color, I);
 
     world->render(zoom);
 }
@@ -274,12 +268,13 @@ void MainWindow::on_doubleSpinBox_valueChanged(double arg1)
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-
     if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
     {
         int tmp = ui->horizontalSlider->value();
         world->render(tmp);
     }
+    if (event->key() == Qt::Key_E)
+        clear_all();
 }
 
 void write_res(const std::string &name, const int& num, const double &t)
@@ -324,12 +319,7 @@ void MainWindow::on_obj_add_pushButton_clicked()
         double r = str_to_double(ui->sphere_radius->text(), ok1);
         if (!ok1)
             return;
-        name = "шар № " + QString("%1").arg(objects_count[SPHERE]);
-        objects_count[SPHERE]++;
-        ui->listWidget_2->addItem(name);
-        GeometricObject *sphere = new Sphere(center, r);
-        sphere->set_material(m);
-        world->add_object(sphere);
+        add_sphere(center, r, m);
         break;
     }
     case BOX:
@@ -339,13 +329,7 @@ void MainWindow::on_obj_add_pushButton_clicked()
         double c = str_to_double((ui->box_height->text()), ok3);
         if (!ok1 || !ok2 || !ok3)
             return;
-        name = "параллелепипед № " + QString("%1").arg(objects_count[BOX]);
-        objects_count[BOX]++;
-        ui->listWidget_2->addItem(name);
-
-        GeometricObject *box = new Box(center, a, b, c);
-        box->set_material(m);
-        world->add_object(box);
+        add_box(center, a, b, c, m);
         break;
     }
     case PYRAMID:
@@ -354,13 +338,7 @@ void MainWindow::on_obj_add_pushButton_clicked()
         double h = str_to_double((ui->pyramid_h->text()), ok2);
         if (!ok1 || !ok2)
             return;
-        name = "пирамида № " + QString("%1").arg(objects_count[PYRAMID]);
-        objects_count[PYRAMID]++;
-        ui->listWidget_2->addItem(name);
-
-        GeometricObject *pyramid = new Pyramid(center, a, h);
-        pyramid->set_material(m);
-        world->add_object(pyramid);
+        add_pyramid(center, a, h, m);
         break;
     }
     case CYLINDER:
@@ -369,13 +347,7 @@ void MainWindow::on_obj_add_pushButton_clicked()
         double h = str_to_double((ui->cylinder_height->text()), ok2);
         if (!ok1 || !ok2)
             return;
-        name = "цилиндр № " + QString("%1").arg(objects_count[CYLINDER]);
-        objects_count[CYLINDER]++;
-        ui->listWidget_2->addItem(name);
-
-        GeometricObject *cylinder = new Cylinder(center, h, r);
-        cylinder->set_material(m);
-        world->add_object(cylinder);
+        add_cylinder(center, r, h, m);
         break;
     }
     case CONE:
@@ -384,13 +356,7 @@ void MainWindow::on_obj_add_pushButton_clicked()
         double h = str_to_double((ui->cone_height->text()), ok2);
         if (!ok1 || !ok2)
             return;
-        name = "конус № " + QString("%1").arg(objects_count[CONE]);
-        objects_count[CONE]++;
-        ui->listWidget_2->addItem(name);
-
-        GeometricObject *cone = new Cone(center, r, h);
-        cone->set_material(m);
-        world->add_object(cone);
+        add_cone(center, r, h, m);
         break;
     }
     case TORI:
@@ -399,13 +365,7 @@ void MainWindow::on_obj_add_pushButton_clicked()
         double b = str_to_double((ui->tori_inner_radius->text()), ok1);
         if (!ok1 || !ok2)
             return;
-        name = "тор № " + QString("%1").arg(objects_count[TORI]);
-        objects_count[TORI]++;
-        ui->listWidget_2->addItem(name);
-
-        GeometricObject *tori = new Tori(center, a, b);
-        tori->set_material(m);
-        world->add_object(tori);
+        add_tori(center, a, b, m);
         break;
     }
     }
@@ -485,4 +445,173 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             }
         }
     }
+}
+
+void MainWindow::add_light(const Point3D &center, const RGBColor &color, const double &I)
+{
+    Light *light = new Light(I, color, center);
+    world->add_light(light);
+
+    QString name = "источник № " + QString("%1").arg(lights_count);
+    ui->listWidget->addItem(name);
+    lights_count++;
+}
+
+void MainWindow::add_sphere(const Point3D &center, const double &r, Material *m)
+{
+    QString name = "шар № " + QString("%1").arg(objects_count[SPHERE]);
+    objects_count[SPHERE]++;
+    ui->listWidget_2->addItem(name);
+    GeometricObject *sphere = new Sphere(center, r);
+    sphere->set_material(m);
+    world->add_object(sphere);
+}
+
+void MainWindow::add_box(const Point3D &center, const double &a, const double &b, const double &c, Material *m)
+{
+    QString name = "параллелепипед № " + QString("%1").arg(objects_count[BOX]);
+    objects_count[BOX]++;
+    ui->listWidget_2->addItem(name);
+
+    GeometricObject *box = new Box(center, a, b, c);
+    box->set_material(m);
+    world->add_object(box);
+}
+
+void MainWindow::add_pyramid(const Point3D &center, const double &a, const double &h, Material *m)
+{
+    QString name = "пирамида № " + QString("%1").arg(objects_count[PYRAMID]);
+    objects_count[PYRAMID]++;
+    ui->listWidget_2->addItem(name);
+
+    GeometricObject *pyramid = new Pyramid(center, a, h);
+    pyramid->set_material(m);
+    world->add_object(pyramid);
+}
+
+void MainWindow::add_cone(const Point3D &center, const double &r, const double &h, Material *m)
+{
+    QString name = "конус № " + QString("%1").arg(objects_count[CONE]);
+    objects_count[CONE]++;
+    ui->listWidget_2->addItem(name);
+
+    GeometricObject *cone = new Cone(center, r, h);
+    cone->set_material(m);
+    world->add_object(cone);
+}
+
+void MainWindow::add_cylinder(const Point3D &center, const double &r, const double &h, Material *m)
+{
+    QString name = "цилиндр № " + QString("%1").arg(objects_count[CYLINDER]);
+    objects_count[CYLINDER]++;
+    ui->listWidget_2->addItem(name);
+
+    GeometricObject *cylinder = new Cylinder(center, h, r);
+    cylinder->set_material(m);
+    world->add_object(cylinder);
+}
+
+void MainWindow::add_tori(const Point3D &center, const double &a, const double &b, Material *m)
+{
+    QString name = "тор № " + QString("%1").arg(objects_count[TORI]);
+    objects_count[TORI]++;
+    ui->listWidget_2->addItem(name);
+
+    GeometricObject *tori = new Tori(center, a, b);
+    tori->set_material(m);
+    world->add_object(tori);
+}
+
+void MainWindow::on_scene1_clicked()
+{
+    clear_all();
+    Material *m1 = new Material();
+    choose_material(m1, PLASTIC);
+    m1->color = RGBColor(1, 1, 1);
+    add_sphere(Point3D(0, 500, 0), 499, m1);
+
+    Material *m2 = new Material();
+    choose_material(m2, RUBBER);
+    m2->color = RGBColor(1, 1, 0);
+    add_box(Point3D(-3, 1, -5), 4, 2, 2, m2);
+
+    Material *m3 = new Material();
+    choose_material(m3, MIRROR);
+    m3->color = RGBColor(1, 0.87, 0.64);
+    add_sphere(Point3D(1, 0, -3), 1, m3);
+
+    Material *m4 = new Material();
+    choose_material(m4, METAL);
+    m4->color = RGBColor(1, 0.18, 0.67);
+    add_cylinder(Point3D(0, 0, -20), 3, 4, m4);
+
+    Material *m5 = new Material();
+    choose_material(m5, GLASS);
+    m5->color = RGBColor(0.84, 0.92, 1);
+    add_cone(Point3D(-1, 0, -4), 0.3, 0.5, m5);
+
+    add_light(Point3D(0, -5, -2), RGBColor(1, 1, 1), 1);
+    world->render(-10);
+}
+
+
+
+void MainWindow::on_scene2_clicked()
+{
+    clear_all();
+    Material *m1 = new Material();
+    choose_material(m1, METAL);
+    m1->color = RGBColor(1, 1, 1);
+    add_sphere(Point3D(0, 2, 0), 1, m1);
+
+    Material *m2 = new Material();
+    choose_material(m2, RUBBER);
+    m2->color = RGBColor(1, 1, 1);
+    add_tori(Point3D(0, 2, 0), 2, 0.3, m2);
+
+
+    add_light(Point3D(0, 0, -2), RGBColor(1, 0, 1), 1);
+    add_light(Point3D(0, 3, 2), RGBColor(0.89, 0.3, 0), 1);
+    add_light(Point3D(-0.5, 2, -5), RGBColor(0, 0.7, 0.1), 1);
+    world->render(-10);
+}
+
+void MainWindow::on_scene3_clicked()
+{
+    clear_all();
+    Material *m1 = new Material();
+    choose_material(m1, RUBBER);
+    m1->color = RGBColor(1, 0, 0);
+    add_pyramid(Point3D(0, 2, 0), 4, 4.5, m1);
+
+    Material *m2 = new Material();
+    choose_material(m2, GLASS);
+    m2->color = RGBColor(1, 1, 1);
+    add_sphere(Point3D(1, 1, -3), 1.3, m2);
+
+    Material *m3 = new Material();
+    choose_material(m3, GLASS);
+    m3->color = RGBColor(0.84, 0.92, 0.94);
+    add_box(Point3D(-1.5, 0, -5), 1, 2, 3, m3);
+
+    world->render(-10);
+}
+
+void MainWindow::clear_all()
+{
+    int obj_index = world->get_obj_size();
+    while (obj_index != 0)
+    {
+        world->remove_object(obj_index - 1);
+        obj_index--;
+    }
+    ui->listWidget_2->clear();
+    int light_index = world->get_light_size();
+    while (light_index != 0)
+    {
+        world->remove_light(light_index - 1);
+        light_index--;
+    }
+    ui->listWidget->clear();
+    world->render(zoom);
 }

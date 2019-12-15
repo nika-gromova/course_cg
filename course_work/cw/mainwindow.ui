@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1460</width>
-    <height>950</height>
+    <height>970</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -961,7 +961,7 @@
     <property name="geometry">
      <rect>
       <x>990</x>
-      <y>470</y>
+      <y>450</y>
       <width>461</width>
       <height>461</height>
      </rect>
@@ -1320,6 +1320,54 @@
       </item>
      </layout>
     </widget>
+   </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>990</x>
+      <y>910</y>
+      <width>461</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_21">
+     <item>
+      <widget class="QPushButton" name="scene1">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>сцена 1</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="scene2">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>сцена 2</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="scene3">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>сцена 3</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
  </widget>

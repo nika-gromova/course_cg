@@ -127,3 +127,8 @@ int World::get_obj_size()
     return data.objects.size();
 }
 
+int World::get_light_size()
+{
+    return data.lights.size();
+}
+
