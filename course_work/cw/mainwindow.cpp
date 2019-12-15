@@ -7,6 +7,9 @@
 #include <QLocale>
 #include <QRegExp>
 #include <QMessageBox>
+#include <chrono>
+#include <string>
+#include <fstream>
 
 #include "vector3d.h"
 #include "maths.h"
@@ -27,7 +30,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->object_comboBox->addItem(tr("сфера"));
+    std::cout << qVersion() << std::endl;
+    ui->object_comboBox->addItem(tr("шар"));
     ui->object_comboBox->addItem(tr("параллелепипед"));
     ui->object_comboBox->addItem(tr("правильная четырехугольная пирамида"));
     ui->object_comboBox->addItem(tr("конус"));
@@ -278,6 +282,14 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     }
 }
 
+void write_res(const std::string &name, const int& num, const double &t)
+{
+    std::ofstream file;
+    file.open(name, std::ios_base::app);
+    file << num << ';' << t << '\n';
+    file.close();
+}
+
 void MainWindow::on_obj_add_pushButton_clicked()
 {
     bool ok1, ok2, ok3;
@@ -312,7 +324,7 @@ void MainWindow::on_obj_add_pushButton_clicked()
         double r = str_to_double(ui->sphere_radius->text(), ok1);
         if (!ok1)
             return;
-        name = "сфера № " + QString("%1").arg(objects_count[SPHERE]);
+        name = "шар № " + QString("%1").arg(objects_count[SPHERE]);
         objects_count[SPHERE]++;
         ui->listWidget_2->addItem(name);
         GeometricObject *sphere = new Sphere(center, r);
@@ -397,8 +409,19 @@ void MainWindow::on_obj_add_pushButton_clicked()
         break;
     }
     }
-
     world->render(zoom);
+
+    /* замеры времени
+    auto t_start = std::chrono::high_resolution_clock::now();
+    for (auto i = 0; i < 10; i++)
+    {
+        world->render(zoom);
+    }
+    auto t_end = std::chrono::high_resolution_clock::now();
+    double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(t_end - t_start).count();
+    write_res("num_of_glass_4.txt", world->get_obj_size(), elapsed_seconds / 10.0);
+    */
+
 }
 
 bool MainWindow::choose_color(double &r, double &g, double &b)

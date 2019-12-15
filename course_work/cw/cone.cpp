@@ -112,7 +112,7 @@ Vector3D Cone::calculate_normal(const Point3D &p)
     double ox = p.x - center.x;
     double oy = p.y - center.y;
     double oz = p.z - center.z;
-    Vector3D normal = Vector3D((2 * hr * hr * ox), (-2) * (oy + height), (2 * hr * hr * oz));
+    Vector3D normal = Vector3D((2 * hr * ox), (-2) * (oy + height), (2 * hr * oz));
     return normal.get_normal();
 }
 

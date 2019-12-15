@@ -125,8 +125,6 @@ RGBColor Tracer::compute_intensity(const WorldData &data, const Point3D &interse
     for (auto i = 0; i < data.lights.size(); i++)
     {
         shadow = false;
-        if (i == 1)
-            cos_alpha = 0;
         light_ray.direction = data.lights[i]->get_light_ray(intersect_point);
         light_ray.origin = intersect_point;
         distance = light_ray.direction.length();
@@ -134,8 +132,11 @@ RGBColor Tracer::compute_intensity(const WorldData &data, const Point3D &interse
 
         for (auto const &obj : data.objects)
         {
-            bool tmp = (obj->hit(light_ray));
-            shadow = shadow || tmp;
+            if (obj->hit(light_ray))
+            {
+                shadow = true;
+                break;
+            }
         }
         if (shadow)
             continue;

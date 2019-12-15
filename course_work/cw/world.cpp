@@ -1,14 +1,12 @@
 #include "world.h"
-
 #include <thread>
 #include <mutex>
-#include <chrono>
+
 
 #define THREADS_COUNT 4
 
 std::mutex mtx;
 std::vector<std::thread> threads(THREADS_COUNT);
-
 
 World::World(int w, int h, int s = 1): canvas_height(h), canvas_width(w), pixel_size(s)
 {
@@ -26,19 +24,6 @@ World::~World()
     delete tracer;
 }
 
-void World::add_object(GeometricObject *obj)
-{
-    data.objects.push_back(obj);
-}
-
-
-void one_ray(int x, int y, const Ray &ray, Tracer *tracer, MyPaintWidget *draw_widget,
-             const WorldData &data)
-{
-    RGBColor pixel_color = tracer->trace_ray(ray, data);
-    if (draw_widget)
-        draw_widget->color_pixel(x, y, pixel_color);
-}
 /*
 void World::render(int zoom)
 {
@@ -63,11 +48,14 @@ void World::render(int zoom)
 }
 */
 
+
 void World::render(int zoom)
 {
     int start = 0;
     int end = 0;
-    int step = canvas_width / THREADS_COUNT;
+    double dcw = canvas_width;
+    double pstep = dcw / THREADS_COUNT;
+    int step = round(pstep);
     thread_params params;
 
     for (auto i = 0; i < THREADS_COUNT; i++)
@@ -82,6 +70,7 @@ void World::render(int zoom)
     {
         threads[i].join();
     }
+
     draw_widget->repaint();
 }
 
@@ -89,6 +78,12 @@ void World::render(int zoom)
 void World::set_my_paint_widget(MyPaintWidget *dw)
 {
     draw_widget = dw;
+}
+
+
+void World::add_object(GeometricObject *obj)
+{
+    data.objects.push_back(obj);
 }
 
 void World::remove_object(const int &index)
@@ -125,5 +120,10 @@ void World::render_coloumns(World *w, thread_params p, int z)
                 w->draw_widget->color_pixel(x, y, pixel_color);
         }
     }
+}
+
+int World::get_obj_size()
+{
+    return data.objects.size();
 }
 

@@ -34,6 +34,9 @@ public:
     void remove_light(const int &index);
     void render_coloumns(World *w, thread_params p, int z);
     Tracer *tracer;
+
+    int get_obj_size();
+
 private:
     ViewFeild vf;
     int canvas_height;
